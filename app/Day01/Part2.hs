@@ -4,14 +4,16 @@ import System.TimeIt (timeItT)
 import Text.Printf (printf)
 import Control.Exception (evaluate)
 
+import qualified Data.Set as S
+
 import Day01
 
 -- | solve the puzzle
 solve :: [Frequency] -> Integer
-solve fs = go [] $ scanl (+) 0 (cycle fs) where
+solve fs = go S.empty $ scanl (+) 0 (cycle fs) where
   go seenFrequencySums (fsum:rest)
-    | elem fsum seenFrequencySums = fsum
-    | otherwise = go ([fsum] ++ seenFrequencySums) rest
+    | S.member fsum seenFrequencySums = fsum
+    | otherwise = go (S.insert fsum seenFrequencySums) rest
   go _ [] = error "Infinite list cannot be empty."
 
 -- | main

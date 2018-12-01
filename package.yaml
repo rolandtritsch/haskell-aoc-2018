@@ -79,6 +79,7 @@ executables:
     dependencies:
     - haskell-aoc
     - timeit
+    - containers
 
 tests:
   haskell-aoc-test:
@@ -127,3 +128,4 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - containers
