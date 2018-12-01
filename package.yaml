@@ -1,0 +1,92 @@
+name:                haskell-aoc
+version:             0.1.0.0
+github:              "rolandtritsch/haskell-aoc-2018"
+license:             BSD3
+author:              "Roland Tritsch"
+maintainer:          "roland@tritsch.org"
+copyright:           "2018 Roland Tritsch"
+
+extra-source-files:
+- README.md
+
+synopsis:            An implementation of the Advent of Code - 2018
+category:            Web
+
+description:         Please see the README on Github
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs:
+  - src
+  ghc-options:
+  - -O2
+  - -Wall -Werror
+  dependencies:
+  - containers
+
+executables:
+  haskell-aoc-exe:
+    main: Main.hs
+    source-dirs:
+    - app
+    ghc-options:
+    - -main-is Main.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+    - containers
+
+  haskell-aoc-day00p1:
+    main: app/Day00/Part1.hs
+    ghc-options:
+    - -main-is Day00.Part1.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day00p2:
+    main: app/Day00/Part2.hs
+    ghc-options:
+    - -main-is Day00.Part2.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+tests:
+  haskell-aoc-test:
+    main: Spec.hs
+    source-dirs:
+    - test
+    - app
+    ghc-options:
+    - -main-is Spec.main
+    dependencies:
+    - haskell-aoc
+    - hspec
+    - timeit
+    - containers
+
+  haskell-aoc-test-day00:
+    main: Day00Spec.hs
+    source-dirs:
+    - test
+    - app
+    other-modules:
+    - Day00.Part1
+    - Day00.Part2
+    ghc-options:
+    - -main-is Day00Spec.run
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - hspec
+    - timeit
