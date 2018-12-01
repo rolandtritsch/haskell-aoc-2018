@@ -8,7 +8,11 @@ import Day01
 
 -- | solve the puzzle
 solve :: [Frequency] -> Integer
-solve _ = 2
+solve fs = go [] $ scanl (+) 0 (cycle fs) where
+  go seenFrequencySums (fsum:rest)
+    | elem fsum seenFrequencySums = fsum
+    | otherwise = go ([fsum] ++ seenFrequencySums) rest
+  go _ [] = error "Infinite list cannot be empty."
 
 -- | main
 main :: IO ()
