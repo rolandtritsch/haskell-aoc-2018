@@ -11,26 +11,46 @@ sudo: required
 
 cache:
   directories:
-    - ~/rolandtritsch/haskell-aoc-2017/.stack-work
+    - ~/rolandtritsch/haskell-aoc-2018/.stack-work
+    - ~/rolandtritsch/haskell-aoc-2018/dist
     - ~/.stack
+    - ~/.eta
+    - ~/.etlas
 
 before_install:
   - curl -sSL https://get.haskellstack.org/ | sh
   - stack build --dry-run
+  - curl -O https://cdnverify.eta-lang.org/eta-binaries/etlas-1.5.0.0/binaries/x86_64-linux/etlas
+  - chmod 700 etlas
+  - mv etlas ~/bin
+  - yes | etlas update
+  - etlas select latest
 
 script:
   - travis_wait 60 ./bin/run.sh
 
 env:
-  - DAY=00 PART=1 TYPE=EXE
-  - DAY=00 PART=2 TYPE=EXE
-  - DAY=00 PART=1 TYPE=TEST
-  - DAY=00 PART=2 TYPE=TEST
-  - DAY=01 PART=1 TYPE=EXE
-  - DAY=01 PART=2 TYPE=EXE
-  - DAY=01 PART=1 TYPE=TEST
-  - DAY=01 PART=2 TYPE=TEST
-  - DAY=02 PART=1 TYPE=EXE
-  - DAY=02 PART=2 TYPE=EXE
-  - DAY=02 PART=1 TYPE=TEST
-  - DAY=02 PART=2 TYPE=TEST
+  - DAY=00 PART=1 TYPE=EXE LANG=HASKELL
+  - DAY=00 PART=2 TYPE=EXE LANG=HASKELL
+  - DAY=00 PART=1 TYPE=TEST LANG=HASKELL
+  - DAY=00 PART=2 TYPE=TEST LANG=HASKELL
+  - DAY=00 PART=1 TYPE=EXE LANG=ETA
+  - DAY=00 PART=2 TYPE=EXE LANG=ETA
+  - DAY=00 PART=1 TYPE=TEST LANG=ETA
+  - DAY=00 PART=2 TYPE=TEST LANG=ETA
+  - DAY=01 PART=1 TYPE=EXE LANG=HASKELL
+  - DAY=01 PART=2 TYPE=EXE LANG=HASKELL
+  - DAY=01 PART=1 TYPE=TEST LANG=HASKELL
+  - DAY=01 PART=2 TYPE=TEST LANG=HASKELL
+  - DAY=01 PART=1 TYPE=EXE LANG=ETA
+  - DAY=01 PART=2 TYPE=EXE LANG=ETA
+  - DAY=01 PART=1 TYPE=TEST LANG=ETA
+  - DAY=01 PART=2 TYPE=TEST LANG=ETA
+  - DAY=02 PART=1 TYPE=EXE LANG=HASKELL
+  - DAY=02 PART=2 TYPE=EXE LANG=HASKELL
+  - DAY=02 PART=1 TYPE=TEST LANG=HASKELL
+  - DAY=02 PART=2 TYPE=TEST LANG=HASKELL
+  - DAY=02 PART=1 TYPE=EXE LANG=ETA
+  - DAY=02 PART=2 TYPE=EXE LANG=ETA
+  - DAY=02 PART=1 TYPE=TEST LANG=ETA
+  - DAY=02 PART=2 TYPE=TEST LANG=ETA
