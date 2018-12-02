@@ -17,3 +17,5 @@ Note: The code also compiles with [Eta](https://eta-lang.org). To make this work
 * run `etlas run haskell-aoc-exe`
 
 Note: You need to have stack installed and need to run `stack build --dry-run` first (to generate the `cabal` file (the dry-run will invoke hpack to generate the cabal file from the package.yaml file)).
+
+Locally you can run all solutions with `./bin/run-local.sh | grep -e "->"` (or you can fork the repo into your account and enable a/the travis build).

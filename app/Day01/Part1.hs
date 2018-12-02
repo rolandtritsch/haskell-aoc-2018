@@ -14,4 +14,4 @@ solve fs = foldl (+) 0 fs
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day01: Part1: solve -> (%f, %d)\n" time result
+  printf "Day01: Part1: Chronal Calibration: sum -> (%f, %d)\n" time result

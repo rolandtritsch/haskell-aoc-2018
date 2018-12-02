@@ -8,7 +8,7 @@ do
   for p in {1..2}
   do
     export PART=${p}
-    export LANG=HASKELL && ./bin/run.sh
-    export LANG=ETA && ./bin/run.sh
+    export LANG=HASKELL && ./bin/run.sh 2>&1
+    export LANG=ETA && ./bin/run.sh 2>&1
   done
 done
