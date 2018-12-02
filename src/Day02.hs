@@ -3,7 +3,7 @@ Problem: <https://adventofcode.com/2018/day/2>
 
 Solution:
 
-General - ???
+General - Counting number chars in a string.
 
 Part 1 - ???
 
@@ -13,6 +13,8 @@ module Day02 where
 
 import Util (inputRaw)
 
+type BoxId = String
+
 -- | read the input file
-input :: [String]
-input = inputRaw "input/Day00input.txt"
+input :: [BoxId]
+input = inputRaw "input/Day02input.txt"

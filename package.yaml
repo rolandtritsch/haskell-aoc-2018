@@ -39,6 +39,7 @@ executables:
     - haskell-aoc
     - timeit
     - containers
+    - Unique
 
   haskell-aoc-day00p1:
     main: app/Day00/Part1.hs
@@ -90,6 +91,7 @@ executables:
     dependencies:
     - haskell-aoc
     - timeit
+    - Unique
 
   haskell-aoc-day02p2:
     main: app/Day02/Part2.hs
@@ -114,6 +116,7 @@ tests:
     - hspec
     - timeit
     - containers
+    - Unique
 
   haskell-aoc-test-day00:
     main: Day00Spec.hs
@@ -166,3 +169,4 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - Unique
