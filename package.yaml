@@ -25,6 +25,7 @@ library:
   - -Wall -Werror
   dependencies:
   - containers
+  - split
 
 executables:
   haskell-aoc-exe:
@@ -112,6 +113,7 @@ executables:
     dependencies:
     - haskell-aoc
     - timeit
+    - containers
 
   haskell-aoc-day03p2:
     main: app/Day03/Part2.hs
@@ -207,3 +209,4 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - containers

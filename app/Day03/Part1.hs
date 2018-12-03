@@ -4,11 +4,15 @@ import System.TimeIt (timeItT)
 import Text.Printf (printf)
 import Control.Exception (evaluate)
 
+import qualified Data.Map as M
+
 import Day03
 
 -- | solve the puzzle
-solve :: [String] -> Integer
-solve _ = 1
+solve :: [Claim] -> Int
+solve cs = overlappingInches where
+  overlappingInches = length $ filter ((<=) 2) $ M.elems fabric
+  fabric = foldl claim M.empty cs
 
 -- | main
 main :: IO ()
