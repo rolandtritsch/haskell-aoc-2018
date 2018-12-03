@@ -2,10 +2,10 @@
 
 export TYPE=EXE
 
-for d in {1..2}
+for d in {1..3}
 do
   export DAY=0${d}
-  for p in {1..3}
+  for p in {1..2}
   do
     export PART=${p}
     export LANG=HASKELL && ./bin/run.sh 2>&1
