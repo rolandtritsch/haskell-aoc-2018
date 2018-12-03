@@ -19,7 +19,7 @@ solve cs = nonOverlappingCid where
       | otherwise = go rest
       where
         cidIsNotInAnyOtherList = (not $ any id $ map (elem (head cids)) ((\\) claimsCids [cids]))
-  claimsCids = nub $ sort $ map fst $ M.elems fabric
+  claimsCids = nub $ sort $ M.elems fabric
   fabric = foldl claim M.empty cs
 
 -- | main

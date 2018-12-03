@@ -11,7 +11,7 @@ import Day03
 -- | solve the puzzle
 solve :: [Claim] -> Int
 solve cs = overlappingInches where
-  overlappingInches = length $ filter ((<=) 2) $ map snd $ M.elems fabric
+  overlappingInches = length $ filter ((<) 1) $ map length $ M.elems fabric
   fabric = foldl claim M.empty cs
 
 -- | main
