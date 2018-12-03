@@ -124,6 +124,7 @@ executables:
     dependencies:
     - haskell-aoc
     - timeit
+    - containers
 
 tests:
   haskell-aoc-test:
