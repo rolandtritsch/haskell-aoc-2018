@@ -15,17 +15,13 @@ import Data.List.Split (splitOneOf)
 
 import qualified Data.Map as M
 
---import Debug.Trace (trace)
-
 import Util (inputRaw)
 
-data Claim = Claim {
-  cid :: Int,
-  cposition :: (Int, Int),
-  cdimension :: (Int, Int)
-  } deriving (Show, Eq)
+-- | Claim cid cposition cdimension
+data Claim = Claim Int (Int, Int) (Int, Int) deriving (Show, Eq)
 
-type Fabric = M.Map (Int, Int) Int
+-- | Fabric position (cids that claimed that position, claims)
+type Fabric = M.Map (Int, Int) ([Int], Int)
 
 -- | read the input file.
 input :: [Claim]
@@ -40,6 +36,7 @@ input = (map processLine . inputRaw) "input/Day03input.txt" where
 -- | make/stake a claim on an fabric area (increase the counter of the
 -- relevant cells by one).
 claim :: Fabric -> Claim -> Fabric
-claim f (Claim _ (row, col) (rdim, cdim)) = foldl claimInch f cells where
+claim f (Claim cid (row, col) (rdim, cdim)) = foldl claimInch f cells where
   cells = [(r, c) | r <- [row..row + rdim - 1], c <- [col..col + cdim - 1]]
-  claimInch f' p' = M.insert p' ((M.findWithDefault 0 p' f') + 1) f'
+  claimInch f' p' = M.insert p' (cids ++ [cid], claims + 1) f' where
+    (cids, claims) = M.findWithDefault ([],0) p' f'
