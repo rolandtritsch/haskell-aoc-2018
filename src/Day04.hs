@@ -32,7 +32,7 @@ the maximum of minsAsleep (and return the guard and the min.
 module Day04 where
 
 import Data.Ord (comparing)
-import Data.List (sort, repeat, groupBy, maximumBy, transpose)
+import Data.List (sort, groupBy, maximumBy, transpose)
 import Data.List.Split (splitOneOf)
 
 import Util (inputRaw)
