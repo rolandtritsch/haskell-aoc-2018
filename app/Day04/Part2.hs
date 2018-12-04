@@ -9,10 +9,10 @@ import Day04
 -- | solve the puzzle
 solve :: [String] -> Int
 solve rs = gid * minute where
-  (gid, (minute, _)) = mostAsleepGid $ processInput rs
+  (gid, (minute, _)) = mostAsleepGidMinute $ (stream2Record . input2Stream) rs
 
 -- | main
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day04: Part2: Repose Record: solve -> (%d, %f)\n" result time
+  printf "Day04: Part2: Repose Record: mostAsleepGidMinute -> (%d, %f)\n" result time

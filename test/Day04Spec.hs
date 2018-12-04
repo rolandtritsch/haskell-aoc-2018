@@ -32,10 +32,10 @@ run = hspec $ do
     it "should return the input" $ do
       head input `shouldBe` "[1518-02-10 23:47] Guard #1033 begins shift"
 
-  describe "processInput" $ do
+  describe "stream2Record" $ do
     it "should process the input (for the testcase(s))" $ do
-      let records = processInput testInput
-      records !! 0 `shouldBe` Record 10 "1518-11-01" [False,False,False,False,False,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,False,False,False,False,False,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,False,False,False,False,False]
+      let records = (stream2Record . input2Stream) testInput
+      records !! 0 `shouldBe` Record 10 [False,False,False,False,False,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,False,False,False,False,False,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,False,False,False,False,False]
 
   describe "solve - Part1" $ do
     it "should solve the puzzle" $ do

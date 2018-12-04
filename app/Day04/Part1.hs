@@ -9,7 +9,7 @@ import Day04
 -- | solve the puzzle
 solve :: [String] -> Int
 solve rs = maxCid * bestMinute where
-  records = processInput rs
+  records = (stream2Record . input2Stream) rs
   (maxCid, _) = mostAsleep records
   (bestMinute, _) = asleepMost records maxCid
 
@@ -17,4 +17,4 @@ solve rs = maxCid * bestMinute where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day04: Part1: Repose Record: solve -> (%d, %f)\n" result time
+  printf "Day04: Part1: Repose Record: mostAsleep -> (%d, %f)\n" result time

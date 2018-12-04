@@ -3,11 +3,31 @@ Problem: <https://adventofcode.com/2018/day/4>
 
 Solution:
 
-General - ???
+General - Tough.
 
-Part 1 - ???
+First question: What is the best data structure to read-in the problem?
+At the end you realize that the date is not needed to solve the problems.
+It is only needed to sort/order the input lines.
 
-Part 2 - ???
+I then decided to turn every line into an event and then processes the
+resulting (ordered) event stream to produce records from it. Every
+record shows when a guard was asleep (per day/shift). Here it is
+important to realize that you need to represent the minutes that he/she
+is asleep in a way that will allow you to solve the problems. I decided
+to generate a *mask* for the hour that the guard is on duty. Every minute
+is either on (True; means asleep) or off (False; awake).
+
+With that I can start to aggregate more data structures.
+
+First I can group the records by guard. That will give me all days
+that the guard was on duty (and all the minutes he was asleep)).
+This can then be agreegated further.
+
+Part 1 - Look for the guard that slept the most. And then for the
+minute he/she slept the most.
+
+Part 2 - Create a/the list of (guard, (min, minsAsleep)) and find
+the maximum of minsAsleep (and return the guard and the min.
 -}
 module Day04 where
 
@@ -18,51 +38,63 @@ import Data.List.Split (splitOneOf)
 import Util (inputRaw)
 
 type Id = Int
-type Date = String
+type Minute = Int
 type MinutesAsleep = [Bool]
 
-data Record = Record Id Date MinutesAsleep deriving (Show, Eq, Ord)
+-- | just to process the input.
+data Event
+  = StartShift Id
+  | FallAsleep Minute
+  | Wakeup Minute
+  deriving (Show, Eq)
+
+-- | the data record to show how much a guard is asleep (one record per day).
+data Record = Record Id MinutesAsleep deriving (Show, Eq, Ord)
 
 -- | read the input file
 input :: [String]
-input = sort $ inputRaw "input/Day04input.txt" where
+input = sort $ inputRaw "input/Day04input.txt"
 
--- | process the input. Use a recursion to group/collect all lines
--- for a given line.
-processInput :: [String] -> [Record]
-processInput (l:rest) = go (getGid l) (getDate l) awake rest where
-  -- e.g. [1518-11-22 00:00] Guard #1231 begins shift
-  -- e.g. [1518-04-13 00:00] falls asleep
-  -- e.g. [1518-04-06 00:58] wakes up
-  tokens l' = splitOneOf "[]:# " l'
-  getGid l' = read $ (tokens l') !! 7
-  getDate l' = (tokens l') !! 1
-  awake = take 60 $ repeat False
-  go gid date minsAsleep (l':lines')
-    | isStartOfShift = [Record gid date minsAsleep] ++ go (getGid l') (getDate l') awake lines'
-    | isFallingAsleep = go gid date (fallsAsleep True) lines'
-    | isWakingUp = go gid date (fallsAsleep False) lines'
+-- | turn input into event stream.
+input2Stream :: [String] -> [Event]
+input2Stream ls = map event ls where
+  event l
+    | isStartOfShift = StartShift (read $ tokens !! 7)
+    | isFallingAsleep = FallAsleep (read $ tokens !! 3)
+    | isWakingUp = Wakeup (read $ tokens !! 3)
     | otherwise = error "Do not know what to do."
     where
+      -- e.g. [1518-11-22 00:00] Guard #1231 begins shift
+      -- e.g. [1518-04-13 00:00] falls asleep
+      -- e.g. [1518-04-06 00:58] wakes up
+      tokens = splitOneOf "[]:# " l
       isStartOfShift
-        | (tokens l') !! 5 == "Guard" = True
+        | tokens !! 5 == "Guard" = True
         | otherwise = False
       isFallingAsleep
-        | (tokens l') !! 5 == "falls" = True
+        | tokens !! 5 == "falls" = True
         | otherwise = False
       isWakingUp
-        | (tokens l') !! 5 == "wakes" = True
+        | tokens !! 5 == "wakes" = True
         | otherwise = False
-      fallsAsleep state = take mins minsAsleep ++ (take (60-mins) $ repeat state) where
-        mins = read $ (tokens l') !! 3
-  go gid date minsAsleep [] = [Record gid date minsAsleep]
-processInput [] = error "Upppss. Nothing to process."
+
+-- | process the input stream. Use a recursion to group/collect all
+-- events for the record.
+stream2Record :: [Event] -> [Record]
+stream2Record ((StartShift firstGid):remainingEvents) = go firstGid awake remainingEvents where
+  awake = take 60 $ repeat False
+  go gid minsAsleep ((StartShift gid'):remainingEvents') = [Record gid minsAsleep] ++ go gid' awake remainingEvents'
+  go gid minsAsleep ((FallAsleep minute):remainingEvents') = go gid (fallsAsleep True minute minsAsleep) remainingEvents'
+  go gid minsAsleep ((Wakeup minute):remainingEvents') = go gid (fallsAsleep False minute minsAsleep) remainingEvents'
+  go gid minsAsleep [] = [Record gid minsAsleep]
+  fallsAsleep state mins minsAsleep = take mins minsAsleep ++ (take (60-mins) $ repeat state)
+stream2Record _ = error "Unexpected match in event stream."
 
 -- | group the mins asleep by guard/gid.
 groupMinsAsleepByGid :: [Record] -> [(Id, [MinutesAsleep])]
 groupMinsAsleepByGid rs = map (foldl collectMinsAsleep (0, [])) $ groupBy byGid $ sort rs where
-  byGid (Record gid _ _) (Record gid' _ _) = gid == gid'
-  collectMinsAsleep (_, accumulator) (Record gid _ minsAsleep) = (gid, accumulator ++ [minsAsleep])
+  byGid (Record gid _) (Record gid' _) = gid == gid'
+  collectMinsAsleep (_, accumulator) (Record gid minsAsleep) = (gid, accumulator ++ [minsAsleep])
 
 -- | which guard is most asleep.
 mostAsleep :: [Record] -> (Id, Int)
@@ -79,13 +111,13 @@ histogram minsAsleep = zip [0 ..] $ map (length . filter id) $ transpose minsAsl
 -- | which minute is the given guard asleep the most (min, minsasleep).
 asleepMost :: [Record] -> Id -> (Int, Int)
 asleepMost rs gid = maximumBy (comparing snd) $ histogram minsAsleep where
-  minsAsleep = map (\(Record _ _ ms) -> ms) $ filter (byGid gid) rs where
-    byGid gid' (Record gid'' _ _) = gid' == gid''
+  minsAsleep = map (\(Record _ ms) -> ms) $ filter (byGid gid) rs where
+    byGid gid' (Record gid'' _) = gid' == gid''
 
 -- | combine the previous two functions to get [(gid, (min, minsasleep)].
 -- Then we just have to look for the max minasleep.
-mostAsleepGid :: [Record] -> (Id, (Int, Int))
-mostAsleepGid rs = maximumBy byMinAsleep $ concatMap processHistograms $ map processGroups $ groupMinsAsleepByGid rs where
+mostAsleepGidMinute :: [Record] -> (Id, (Int, Int))
+mostAsleepGidMinute rs = maximumBy byMinAsleep $ concatMap processHistograms $ map processGroups $ groupMinsAsleepByGid rs where
   byMinAsleep (_, (_, minsAsleep)) (_, (_, minsAsleep'))
     | minsAsleep == minsAsleep' = EQ
     | minsAsleep < minsAsleep' = LT
