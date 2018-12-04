@@ -42,8 +42,5 @@ run = hspec $ do
       D04P1.solve input `shouldBe` 131469
 
   describe "solve - Part2" $ do
-    it "should return the right result(s) for the testcases" $ do
-      D04P2.solve [] `shouldBe` 2
-
     it "should solve the puzzle" $ do
-      D04P2.solve input `shouldBe` 2
+      D04P2.solve input `shouldBe` 96951

@@ -7,8 +7,9 @@ import Control.Exception (evaluate)
 import Day04
 
 -- | solve the puzzle
-solve :: [String] -> Integer
-solve _ = 2
+solve :: [String] -> Int
+solve rs = gid * minute where
+  (gid, (minute, _)) = mostAsleepGid $ processInput rs
 
 -- | main
 main :: IO ()

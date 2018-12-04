@@ -58,18 +58,41 @@ processInput (l:rest) = go (getGid l) (getDate l) awake rest where
   go gid date minsAsleep [] = [Record gid date minsAsleep]
 processInput [] = error "Upppss. Nothing to process."
 
+-- | group the mins asleep by guard/gid.
+groupMinsAsleepByGid :: [Record] -> [(Id, [MinutesAsleep])]
+groupMinsAsleepByGid rs = map (foldl collectMinsAsleep (0, [])) $ groupBy byGid $ sort rs where
+  byGid (Record gid _ _) (Record gid' _ _) = gid == gid'
+  collectMinsAsleep (_, accumulator) (Record gid _ minsAsleep) = (gid, accumulator ++ [minsAsleep])
+
 -- | which guard is most asleep.
 mostAsleep :: [Record] -> (Id, Int)
-mostAsleep rs = maximumBy (comparing snd) $ map (foldl sumUpMins (0,0)) recsByGid where
-  recsByGid = groupBy byGid $ sort rs where
-    byGid (Record gid _ _) (Record gid' _ _) = gid == gid'
-  sumUpMins (_, mins) (Record gid _ minsAsleep) = (gid, mins + (length $ filter id minsAsleep))
+mostAsleep rs = maximumBy (comparing snd) $ map sumUpMins (groupMinsAsleepByGid rs) where
+  sumUpMins (gid, minsAsleep) = (gid, foldl (\s ms -> s + (length $ filter id ms)) 0 minsAsleep)
 
--- | which minute is the given guard asleep the most (min, minsasleep).
+-- | do a/the histogram (by mins) for a given list of minutes asleep.
 -- The trick here is to realize that getting the histogramPerMinute
 -- is easy after you collect all minsAsleep for the given gid and
 -- *just* transpose them (turn every col into a row).
+histogram :: [MinutesAsleep] -> [(Int, Int)]
+histogram minsAsleep = zip [0 ..] $ map (length . filter id) $ transpose minsAsleep
+
+-- | which minute is the given guard asleep the most (min, minsasleep).
 asleepMost :: [Record] -> Id -> (Int, Int)
-asleepMost rs gid = maximumBy (comparing snd) $ zip [0..] $ map (length . filter id) histogram where
-  histogram = transpose $ map (\(Record _ _ ms) -> ms) $ filter (byGid gid) rs where
+asleepMost rs gid = maximumBy (comparing snd) $ histogram minsAsleep where
+  minsAsleep = map (\(Record _ _ ms) -> ms) $ filter (byGid gid) rs where
     byGid gid' (Record gid'' _ _) = gid' == gid''
+
+-- | combine the previous two functions to get [(gid, (min, minsasleep)].
+-- Then we just have to look for the max minasleep.
+mostAsleepGid :: [Record] -> (Id, (Int, Int))
+mostAsleepGid rs = maximumBy byMinAsleep $ concatMap processHistograms $ map processGroups $ groupMinsAsleepByGid rs where
+  byMinAsleep (_, (_, minsAsleep)) (_, (_, minsAsleep'))
+    | minsAsleep == minsAsleep' = EQ
+    | minsAsleep < minsAsleep' = LT
+    | minsAsleep > minsAsleep' = GT
+  byMinAsleep _ _ = error "Unexpected pattern match"
+  processGroups (gid, minsAsleep) = (gid, (histogram minsAsleep))
+  processHistograms (gid, h:rest)
+    | null rest = [(gid, h)]
+    | otherwise = [(gid, h)] ++ processHistograms (gid, rest)
+  processHistograms _ = error "Unexpected pattern match"
