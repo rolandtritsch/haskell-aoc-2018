@@ -19,3 +19,18 @@ Note: The code also compiles with [Eta](https://eta-lang.org). To make this work
 Note: You need to have stack installed and need to run `stack build --dry-run` first (to generate the `cabal` file (the dry-run will invoke hpack to generate the cabal file from the package.yaml file)).
 
 Locally you can run all solutions with `./bin/run-local.sh | grep -e "->"` (or you can fork the repo into your account and enable a/the travis build).
+
+## Benchmark
+
+The solutions also measure the elapse time in seconds.
+
+With that we can do a very simple [benchmark](https://docs.google.com/spreadsheets/d/1kHugZ-8mJczlmQRcda23YGvAgeqlJLt1I7cYlDD3Tws/edit?usp=sharing).
+
+![Benchmark](https://www.dropbox.com/s/m6sztfj7qkybbdx/benchmark-2018.png?dl=0&raw=1)
+
+To create the numbers you can just run ...
+
+* `stack build haskell-aoc-exe && stack exec haskell-aoc-exe`
+* `etlas build haskell-aoc-exe && etlas run haskell-aoc-exe`
+
+Note: To run the eta benchmark you need to `export ETA_JAVA_ARGS="-Xss1024M -Xmx4096M"`.
