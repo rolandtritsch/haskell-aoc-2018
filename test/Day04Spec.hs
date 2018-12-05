@@ -35,7 +35,7 @@ run = hspec $ do
   describe "stream2Record" $ do
     it "should process the input (for the testcase(s))" $ do
       let records = (stream2Record . input2Stream) testInput
-      records !! 0 `shouldBe` Record 10 [False,False,False,False,False,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,False,False,False,False,False,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,False,False,False,False,False]
+      records !! 0 `shouldBe` Record 10 "1518-11-01" 0 Awake
 
   describe "solve - Part1" $ do
     it "should solve the puzzle" $ do

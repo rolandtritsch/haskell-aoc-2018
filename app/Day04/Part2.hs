@@ -9,7 +9,7 @@ import Day04
 -- | solve the puzzle
 solve :: [String] -> Int
 solve rs = gid * minute where
-  (gid, (minute, _)) = mostAsleepGidMinute $ (stream2Record . input2Stream) rs
+  (gid, (minute, _)) = mostAsleepSameMinute $ (record2Shift . stream2Record . input2Stream) rs
 
 -- | main
 main :: IO ()

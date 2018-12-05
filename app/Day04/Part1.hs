@@ -9,9 +9,9 @@ import Day04
 -- | solve the puzzle
 solve :: [String] -> Int
 solve rs = maxCid * bestMinute where
-  records = (stream2Record . input2Stream) rs
-  (maxCid, _) = mostAsleep records
-  (bestMinute, _) = asleepMost records maxCid
+  shifts = (record2Shift . stream2Record . input2Stream) rs
+  (maxCid, _) = mostAsleep shifts
+  (bestMinute, _) = asleepMost shifts maxCid
 
 -- | main
 main :: IO ()
