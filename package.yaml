@@ -166,6 +166,26 @@ executables:
     - haskell-aoc
     - timeit
 
+  haskell-aoc-day06p1:
+    main: app/Day06/Part1.hs
+    ghc-options:
+    - -main-is Day06.Part1.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day06p2:
+    main: app/Day06/Part2.hs
+    ghc-options:
+    - -main-is Day06.Part2.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
 tests:
   haskell-aoc-test:
     main: Spec.hs
@@ -279,6 +299,23 @@ tests:
     - Day05.Part2
     ghc-options:
     - -main-is Day05Spec.run
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - hspec
+    - timeit
+
+  haskell-aoc-test-day06:
+    main: Day06Spec.hs
+    source-dirs:
+    - test
+    - app
+    other-modules:
+    - Day06.Part1
+    - Day06.Part2
+    ghc-options:
+    - -main-is Day06Spec.run
     - -O2 -threaded
     - -Wall -Werror
     dependencies:

@@ -6,6 +6,7 @@ import Day02Spec
 import Day03Spec
 import Day04Spec
 import Day05Spec
+import Day06Spec
 
 main :: IO ()
 main = do
@@ -21,3 +22,5 @@ main = do
   Day04Spec.run
   putStrLn "\n--Day05Spec ..."
   Day05Spec.run
+  putStrLn "\n--Day06Spec ..."
+  Day06Spec.run
