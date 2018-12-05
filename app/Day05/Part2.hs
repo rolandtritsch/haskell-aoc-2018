@@ -5,16 +5,17 @@ import Text.Printf (printf)
 import Control.Exception (evaluate)
 
 import Data.Ord (comparing)
-import Data.List (minimumBy)
+import Data.List (minimumBy, nub)
 
 import Day05
 
 -- | solve the puzzle
 solve :: String -> Int
 solve p = snd $ minimumBy (comparing snd) allReactions where
-  allReactions = [(t, reactionLength t) | t <- ['a'..'z']] where
-    reactionLength t = (length . reaction) (filter (\(Unit t' _) -> t /= t') p') where
-      p' = buildPolymer p
+  firstReaction = reaction (buildPolymer p)
+  unitTypes = nub $ map (\(Unit t _) -> t) firstReaction
+  allReactions = [(t, reactionLength t) | t <- unitTypes] where
+    reactionLength t = (length . reaction) (filter (\(Unit t' _) -> t /= t') firstReaction)
 
 -- | main
 main :: IO ()
