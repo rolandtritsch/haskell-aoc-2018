@@ -34,7 +34,7 @@ type Polymer = [Unit]
 input :: String
 input = head $ inputRaw "input/Day05input.txt" where
 
--- | read the input file
+-- | build a/the polymer.
 buildPolymer :: String -> Polymer
 buildPolymer line = map buildPolymer' line where
   buildPolymer' c = Unit (toLower c) (p (isLower c)) where
