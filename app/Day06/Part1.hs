@@ -7,8 +7,9 @@ import Control.Exception (evaluate)
 import Day06
 
 -- | solve the puzzle
-solve :: [String] -> Integer
-solve _ = 1
+solve :: [Origin] -> Int
+solve origins = snd $ largest $ buildGrid b origins where
+  b = Boundary 0 500 0 500
 
 -- | main
 main :: IO ()

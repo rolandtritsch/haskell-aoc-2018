@@ -4,11 +4,14 @@ import System.TimeIt (timeItT)
 import Text.Printf (printf)
 import Control.Exception (evaluate)
 
+import qualified Data.Map as M
+
 import Day06
 
 -- | solve the puzzle
-solve :: [String] -> Integer
-solve _ = 2
+solve :: [Origin] -> Int
+solve os = size where
+  size = length $ filter (\r -> r == (1,1)) $ M.elems $ snd $ buildGrid' (Boundary 0 500 0 500) os
 
 -- | main
 main :: IO ()
