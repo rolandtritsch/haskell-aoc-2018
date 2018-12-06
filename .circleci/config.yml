@@ -25,7 +25,8 @@ jobs:
           name: Cache Dependencies
           key: cci-haskell-aoc-2018-v1-{{ checksum "package.yaml" }}
           paths:
-            - ".stack-work"
-      - store_artifacts: # upload build artifact for display in CircleCI
+            - ~/.stack
+            - ~/.stack-work
+      - store_artifacts:
           path: ~/.local/bin/haskell-aoc-exe
           destination: haskell-aoc-exe
