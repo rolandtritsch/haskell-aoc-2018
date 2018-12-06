@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/rolandtritsch/haskell-aoc-2018.svg?style=svg)](https://circleci.com/gh/rolandtritsch/haskell-aoc-2018) [![Build Status](https://travis-ci.org/rolandtritsch/haskell-aoc-2018.svg?branch=master)](https://travis-ci.org/rolandtritsch/haskell-aoc-2018) [![GitHub issues](https://img.shields.io/github/issues/rolandtritsch/haskell-aoc-2018.svg)](https://github.com/rolandtritsch/haskell-aoc-2018/issues)
+
 # [Advent of Code](https://adventofcode.com) - 2018 (Haskell Edition)
 
 Note: Complete solutions (and a benchmark) for 2017 (in Scala, Haskell and Eta) can be found ([here](https://github.com/rolandtritsch/scala-aoc-2017); star it, if you like it :)).
@@ -33,4 +35,4 @@ To create the numbers you can just run ...
 * `stack build haskell-aoc-exe && stack exec haskell-aoc-exe`
 * `etlas build haskell-aoc-exe && etlas run haskell-aoc-exe`
 
-Note: To run the eta benchmark you need to `export ETA_JAVA_ARGS="-Xss1024M -Xmx4096M"`.
+Note: To run the eta solutions you need to `export ETA_JAVA_ARGS="-Xss1024M -Xmx4096M"`.
