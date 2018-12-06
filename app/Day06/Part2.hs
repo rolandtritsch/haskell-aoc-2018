@@ -17,4 +17,4 @@ solve os = size where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day06: Part2: solve -> (%d, %f)\n" result time
+  printf "Day06: Part2: Chronal Coordinates: region -> (%d, %f)\n" result time
