@@ -4,17 +4,16 @@ import System.TimeIt (timeItT)
 import Text.Printf (printf)
 import Control.Exception (evaluate)
 
-import Data.Ord (comparing)
-import Data.List (minimumBy, nub)
+import Data.List (nub)
 
 import Day05
 
 -- | solve the puzzle
 solve :: String -> Int
-solve p = snd $ minimumBy (comparing snd) allReactions where
+solve p = minimum allReactionLengths where
   firstReaction = reaction (buildPolymer p)
   unitTypes = nub $ map (\(Unit t _) -> t) firstReaction
-  allReactions = [(t, reactionLength t) | t <- unitTypes] where
+  allReactionLengths = [reactionLength t | t <- unitTypes] where
     reactionLength t = (length . reaction) (filter (\(Unit t' _) -> t /= t') firstReaction)
 
 -- | main
