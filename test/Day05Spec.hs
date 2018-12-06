@@ -18,7 +18,7 @@ run = hspec $ do
     it "should return the list of units (for the testcase(s))" $ do
       buildPolymer testInput `shouldBe` [Unit 'd' Minus,Unit 'a' Minus,Unit 'b' Minus,Unit 'a' Plus,Unit 'c' Minus,Unit 'c' Plus,Unit 'a' Minus,Unit 'c' Plus,Unit 'b' Plus,Unit 'a' Plus,Unit 'c' Minus,Unit 'c' Plus,Unit 'c' Minus,Unit 'a' Minus,Unit 'd' Plus,Unit 'a' Plus]
 
-    it "should solve the puzzle" $ do
+    it "should return the list of units" $ do
       take 5 (buildPolymer input) `shouldBe` [Unit 'c' Plus,Unit 'c' Minus,Unit 'v' Minus,Unit 'v' Plus,Unit 'e' Minus]
 
   describe "solve - Part1" $ do

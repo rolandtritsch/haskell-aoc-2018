@@ -48,14 +48,28 @@ canReact (Unit t p) (Unit t' p') = t == t' && p /= p'
 -- | take a Polymer, find the first 2 Units that can react, react and
 -- return the resulting Polymer.
 react :: Polymer -> Polymer
-react (u:[]) = [u]
-react (u:u':[])
+react p = foldr bang [] p where
+  bang u (u':us')
+    | canReact u u' = us'
+    | otherwise = u:u':us'
+  bang u [] = [u]
+
+react'' :: Polymer -> Polymer
+react'' p = foldl bang [] p where
+  bang [] u = [u]
+  bang newP u
+    | canReact (last newP) u = init newP
+    | otherwise = newP ++ [u]
+
+react' :: Polymer -> Polymer
+react' (u:[]) = [u]
+react' (u:u':[])
   | canReact u u' = []
   | otherwise = [u] ++ [u']
-react (u:rest@(u':rest'))
-  | canReact u u' = react rest'
-  | otherwise = [u] ++ react rest
-react p = error ("Unexpected pattern match: " ++ show p)
+react' (u:rest@(u':rest'))
+  | canReact u u' = react' rest'
+  | otherwise = [u] ++ react' rest
+react' p = error ("Unexpected pattern match: " ++ show p)
 
 -- | react until there is nothing to react on.
 reaction :: Polymer -> Polymer
