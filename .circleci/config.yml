@@ -1,0 +1,31 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: fpco/stack-build:lts
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Cached Dependencies
+          keys:
+            - cci-haskell-aoc-2018-v1-{{ checksum "package.yaml" }}
+      - run:
+          name: Resolve/Update Dependencies
+          command: stack setup
+      - run:
+          name: Run tests
+          command: stack test
+      - run:
+          name: Run exe
+          command: stack build :haskell-aoc-exe --exec haskell-aoc-exe
+      - run:
+          name: Install executable
+          command: stack install
+      - save_cache:
+          name: Cache Dependencies
+          key: cci-haskell-aoc-2018-v1-{{ checksum "package.yaml" }}
+          paths:
+            - ".stack-work"
+      - store_artifacts: # upload build artifact for display in CircleCI
+          path: ~/.local/bin/haskell-aoc-exe
+          destination: haskell-aoc-exe
