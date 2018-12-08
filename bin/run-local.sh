@@ -2,7 +2,7 @@
 
 export TYPE=EXE
 
-for d in {1..7}
+for d in {1..8}
 do
   export DAY=0${d}
   for p in {1..2}
