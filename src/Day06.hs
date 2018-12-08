@@ -34,7 +34,7 @@ Part 2 - ???
 module Day06 where
 
 import Data.Ord (comparing)
-import Data.List (minimumBy, filter, nub, groupBy, maximumBy, sortBy)
+import Data.List (minimumBy, nub, groupBy, maximumBy, sortBy)
 import Data.List.Split (splitOneOf)
 import qualified Data.Map as M
 
