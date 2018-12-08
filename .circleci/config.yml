@@ -47,9 +47,6 @@ jobs:
           name: Run build
           command: etlas build --enable-tests
       - run:
-          name: Run tests
-          command: etlas test
-      - run:
           name: Run exe
           command: etlas run haskell-aoc-exe
       - save_cache:
