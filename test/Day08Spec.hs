@@ -10,19 +10,12 @@ run :: IO ()
 run = hspec $ do
   describe "input" $ do
     it "should return the input" $ do
-      head input `shouldBe` "Hello"
-      last input `shouldBe` "World"
+      take 5 input `shouldBe` [7,11,7,2,5]
 
   describe "solve - Part1" $ do
-    it "should return the right result(s) for the testcases" $ do
-      D08P1.solve [] `shouldBe` 1
-
     it "should solve the puzzle" $ do
-      D08P1.solve input `shouldBe` 1
+      D08P1.solve input `shouldBe` 36566
 
   describe "solve - Part2" $ do
-    it "should return the right result(s) for the testcases" $ do
-      D08P2.solve [] `shouldBe` 2
-
     it "should solve the puzzle" $ do
-      D08P2.solve input `shouldBe` 2
+      D08P2.solve input `shouldBe` 30548

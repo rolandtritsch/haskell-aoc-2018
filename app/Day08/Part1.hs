@@ -7,11 +7,11 @@ import Control.Exception (evaluate)
 import Day08
 
 -- | solve the puzzle
-solve :: [String] -> Integer
-solve _ = 1
+solve :: [Int] -> Int
+solve inputStream = (sum . fmap sum) $ createRootNode inputStream
 
 -- | main
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day08: Part1: solve -> (%d, %f)\n" result time
+  printf "Day08: Part1: Memory Maneuver: sum -> (%d, %f)\n" result time
