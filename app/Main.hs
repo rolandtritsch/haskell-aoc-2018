@@ -16,6 +16,8 @@ import qualified Day07.Part1 as D07P1
 import qualified Day07.Part2 as D07P2
 import qualified Day08.Part1 as D08P1
 import qualified Day08.Part2 as D08P2
+import qualified Day09.Part1 as D09P1
+import qualified Day09.Part2 as D09P2
 
 main :: IO ()
 main = do
@@ -35,3 +37,5 @@ main = do
   D07P2.main
   D08P1.main
   D08P2.main
+  D09P1.main
+  D09P2.main
