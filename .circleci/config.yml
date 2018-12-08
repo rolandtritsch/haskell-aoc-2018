@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build:
+  build-haskell:
     docker:
       - image: fpco/stack-build:lts
     steps:
@@ -30,3 +30,32 @@ jobs:
       - store_artifacts:
           path: ~/.local/bin/haskell-aoc-exe
           destination: haskell-aoc-exe
+
+  build-eta:
+    docker:
+      - image: typelead/eta:latest
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Cached Dependencies
+          keys:
+            - cci-eta-aoc-2018-v1-{{ checksum "package.yaml" }}
+      - run:
+          name: Init build
+          command: etlas update && etlas select latest
+      - run:
+          name: Run build
+          command: etlas build --enable-tests
+      - run:
+          name: Run tests
+          command: etlas test
+      - run:
+          name: Run exe
+          command: etlas run haskell-aoc-exe
+      - save_cache:
+          name: Save Cache Dependencies
+          key: cci-eta-aoc-2018-v1-{{ checksum "package.yaml" }}
+          paths:
+            - ~/.etlas
+            - ~/.eta
+            - ~/dist
