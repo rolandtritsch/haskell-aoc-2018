@@ -7,8 +7,9 @@ import Control.Exception (evaluate)
 import Day07
 
 -- | solve the puzzle
-solve :: [String] -> Integer
-solve _ = 1
+solve :: [Dependency] -> [Step]
+solve ds = findPath g (findRoots g) where
+  g = buildGraph ds
 
 -- | main
 main :: IO ()

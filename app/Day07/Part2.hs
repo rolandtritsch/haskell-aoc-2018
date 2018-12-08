@@ -7,7 +7,7 @@ import Control.Exception (evaluate)
 import Day07
 
 -- | solve the puzzle
-solve :: [String] -> Integer
+solve :: [Dependency] -> Integer
 solve _ = 2
 
 -- | main
