@@ -6,7 +6,7 @@ import Test.Hspec
 
 import Day09
 import qualified Day09.Part1 as D09P1
-import qualified Day09.Part2 as D09P2
+--import qualified Day09.Part2 as D09P2
 
 run :: IO ()
 run = hspec $ do
@@ -38,7 +38,8 @@ run = hspec $ do
 
     it "should solve the puzzle" $ do
       D09P1.solve input `shouldBe` 404611
-
+{-
   describe "solve - Part2" $ do
     it "should solve the puzzle" $ do
       D09P2.solve input `shouldBe` 2
+-}
