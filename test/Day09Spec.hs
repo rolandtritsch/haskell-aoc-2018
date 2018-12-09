@@ -1,6 +1,7 @@
 module Day09Spec where
 
 import qualified Data.Map as M
+import qualified Data.Sequence as S
 
 import Test.Hspec
 
@@ -18,9 +19,9 @@ run = hspec $ do
 
   describe "move" $ do
     it "should produce the correct game state (for the testcase(s))" $ do
-      let state22 = GameState (9, 25) M.empty 3 (13, 22, [0,16,8,17,4,18,9,19,2,20,10,21,5,22,11,1,12,6,13,3,14,7,15])
-      let state23 = GameState (9, 25) (M.fromList [(4, 32)]) 4 (6, 23, [0,16,8,17,4,18,19,2,20,10,21,5,22,11,1,12,6,13,3,14,7,15])
-      let state25 = GameState (9, 25) (M.fromList [(4, 32)]) 6 (10, 25, [0,16,8,17,4,18,19,2,24,20,25,10,21,5,22,11,1,12,6,13,3,14,7,15])
+      let state22 = GameState (9, 25) M.empty 3 (13, 22, S.fromList [0,16,8,17,4,18,9,19,2,20,10,21,5,22,11,1,12,6,13,3,14,7,15])
+      let state23 = GameState (9, 25) (M.fromList [(4, 32)]) 4 (6, 23, S.fromList [0,16,8,17,4,18,19,2,20,10,21,5,22,11,1,12,6,13,3,14,7,15])
+      let state25 = GameState (9, 25) (M.fromList [(4, 32)]) 6 (10, 25, S.fromList [0,16,8,17,4,18,19,2,24,20,25,10,21,5,22,11,1,12,6,13,3,14,7,15])
       iterate addMarple (initGame testInput) !! 21 `shouldBe` state22
       iterate addMarple (initGame testInput) !! 22 `shouldBe` state23
       iterate addMarple (initGame testInput) !! 24 `shouldBe` state25
