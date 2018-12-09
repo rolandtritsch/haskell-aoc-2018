@@ -48,7 +48,7 @@ jobs:
           command: etlas build --enable-tests
       - run:
           name: Run exe
-          command: etlas run haskell-aoc-exe
+          command: export ETA_JAVA_ARGS="-Xss1024M -Xmx4096M" && etlas run haskell-aoc-exe
       - save_cache:
           name: Save Cache Dependencies
           key: cci-eta-aoc-2018-v1-{{ checksum "package.yaml" }}
