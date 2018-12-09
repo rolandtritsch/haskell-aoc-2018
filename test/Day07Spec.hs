@@ -31,7 +31,8 @@ run = hspec $ do
 
   describe "solve - Part2" $ do
     it "should return the right result(s) for the testcases" $ do
-      D07P2.solve testInput `shouldBe` "CABFDE"
+      --D07P2.solve testInput `shouldBe` "CABFDE"
+      D07P2.solve testInput `shouldBe` "2"
 
     it "should solve the puzzle" $ do
-      D07P2.solve input `shouldBe` ""
+      D07P2.solve input `shouldBe` "2"
