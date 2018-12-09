@@ -3,11 +3,14 @@ Problem: <https://adventofcode.com/2018/day/9>
 
 Solution:
 
-General - ???
+General - Another hard one. Had a very hard time to
+get the anti-clockwise wrap-around right. I also
+(initially) use list [] as the data structure for
+the field (in the board). That was way too slow.
 
-Part 1 - ???
+Part 1 - Simple. Just get the max of the scores.
 
-Part 2 - ???
+Part 2 - No change. Just runs longer (30 secs).
 -}
 module Day09 where
 
