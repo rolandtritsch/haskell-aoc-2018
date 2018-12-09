@@ -15,4 +15,4 @@ solve ds = findPath g (findRoots g) where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day07: Part1: solve -> (%d, %f)\n" result time
+  printf "Day07: Part1: The Sum of Its Parts: path -> (%s, %f)\n" result time
