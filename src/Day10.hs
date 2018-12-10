@@ -3,11 +3,16 @@ Problem: <https://adventofcode.com/2018/day/10>
 
 Solution:
 
-General - ???
+General - Akward. Was guessing that I can find/detect
+the text/message by looking for a col that is filled
+with lights. Found out that there are more lights
+than positions in the message (means some lights
+are in the same position to form the message).
 
-Part 1 - ???
+Part 1 - Return the message.
 
-Part 2 - ???
+Part 2 - Return the number of secs it took to
+find the message.
 -}
 module Day10 where
 

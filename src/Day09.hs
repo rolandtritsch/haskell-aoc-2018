@@ -53,13 +53,7 @@ addMarple (GameState game@(nop, _) scores player (position, marple, field)) = ne
         | otherwise = position + 2
       nextField = S.insertAt nextPosition nextMarple field
       nextPosition'
-        | position - 7 == 0 = (S.length field)
-        | position - 7 == (negate 1) = (S.length field) - 1
-        | position - 7 == (negate 2) = (S.length field) - 2
-        | position - 7 == (negate 3) = (S.length field) - 3
-        | position - 7 == (negate 4) = (S.length field) - 4
-        | position - 7 == (negate 5) = (S.length field) - 5
-        | position - 7 == (negate 6) = (S.length field) - 6
+        | position - 7 <= 0 = S.length field - (mod (abs (position - 7)) (S.length field))
         | otherwise = position - 7
       nextField' = S.deleteAt nextPosition' field
   nextScores (np, nm, _)

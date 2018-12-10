@@ -31,6 +31,9 @@ run = hspec $ do
       D09P1.solve testInput `shouldBe` 32
       D09P1.solve (1,48) `shouldBe` 95
       D09P1.solve (9,48) `shouldBe` 63
+      D09P1.solve (9,91) `shouldBe` 80
+      D09P1.solve (9,92) `shouldBe` 107
+      D09P1.solve (9,93) `shouldBe` 107
       D09P1.solve (10,1618) `shouldBe` 8317
       D09P1.solve (13,7999) `shouldBe` 146373
       D09P1.solve (17,1104) `shouldBe` 2764
