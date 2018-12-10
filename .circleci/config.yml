@@ -15,9 +15,11 @@ jobs:
       - run:
           name: Run tests
           command: stack test
+          no_output_timeout: 60m
       - run:
           name: Run exe
           command: stack build :haskell-aoc-exe --exec haskell-aoc-exe
+          no_output_timeout: 60m
       - run:
           name: Install executable
           command: stack install
@@ -49,6 +51,7 @@ jobs:
       - run:
           name: Run exe
           command: export ETA_JAVA_ARGS="-Xss1024M -Xmx4096M" && etlas run haskell-aoc-exe
+          no_output_timeout: 120m
       - save_cache:
           name: Save Cache Dependencies
           key: cci-eta-aoc-2018-v1-{{ checksum "package.yaml" }}

@@ -12,7 +12,6 @@ Part 2 - ???
 module Day10 where
 
 import Data.Maybe (isJust)
-import Data.Ord (compare)
 import Data.List (minimumBy, maximumBy, find)
 import Data.List.Split (splitOneOf)
 
