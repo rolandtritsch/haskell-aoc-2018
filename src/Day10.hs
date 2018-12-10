@@ -11,59 +11,66 @@ Part 2 - ???
 -}
 module Day10 where
 
---import Debug.Trace
-
 import Data.Maybe (isJust)
-import Data.Ord (comparing)
-import Data.List (sort, minimumBy, maximumBy)
+import Data.Ord (compare)
+import Data.List (minimumBy, maximumBy, find)
 import Data.List.Split (splitOneOf)
-import qualified Data.Sequence as S
 
 import Util (inputRaw)
 
 type Position = (Int, Int)
 type Velocity = (Int, Int)
 type Light = (Position, Velocity)
-type Sky = S.Seq Light
+type Sky = [Light]
 
 -- | read the input file
 input :: Sky
-input = S.fromList $ sort $ map process $ inputRaw "input/Day10input.txt" where
-  process line = ((x,y), (a,b)) where
+input = map process $ inputRaw "input/Day10input.txt" where
+  process line = ((c,r), (a,b)) where
     -- position=< 9,  1> velocity=< 0,  2>
     tokens = filter (not . null) $ splitOneOf "=<>, " line
-    x = read $ tokens !! 1
-    y = read $ tokens !! 2
+    c = read $ tokens !! 1
+    r = read $ tokens !! 2
     a = read $ tokens !! 4
     b = read $ tokens !! 5
 
 -- | move the sky by one second.
 tick :: Sky -> Sky
-tick sky = foldl update sky [0..(S.length sky)] where
-  update sky' light = S.update light ((x+a,y+b),(a,b)) sky' where
-    ((x,y),(a,b)) = S.index sky' light
+tick sky = map update sky where
+  update ((c, r), (a,b)) = ((c+a,r+b),(a,b))
 
 -- | return the dimensions of the sky.
 dimension :: Sky -> ((Int, Int),(Int, Int))
-dimension s = (fst $ minimumBy (comparing fst) s, fst $ maximumBy (comparing fst) s)
+dimension s = ((minCol, maxCol), (minRow, maxRow)) where
+  byCol ((c, _), _) ((c', _), _) = compare c c'
+  byRow ((_, r), _) ((_, r'), _) = compare r r'
+  (minCol, _) = fst $ minimumBy byCol s
+  (maxCol, _) = fst $ maximumBy byCol s
+  (_, minRow) = fst $ minimumBy byRow s
+  (_, maxRow) = fst $ maximumBy byRow s
 
--- | moving through the night.
+-- | moving through the night (until I see a full column of lights,
+-- which makes me think that this is sky I am looking for).
+-- Note: It seems the input has lights with different velocities
+-- that will converge towards the message. As a matter of fact
+-- there are 350 lights in the input and they converge into 181
+-- positions that will form the message.
 night :: Int -> Sky -> (Int, Sky)
 night secs sky
   | iSeeSomething = (secs, sky)
   | otherwise = night (secs + 1) (tick sky)
   where
-    ((minX, minY),(maxX, maxY)) = dimension sky
-    iSeeSomething = (not . null . filter forVerticalLine) [minY..maxY] where
-      forVerticalLine y = (maxX - minX + 1) == (S.length . S.filter (\((_, y'), _) -> y == y')) sky
+    ((minCol, maxCol),(minRow, maxRow)) = dimension sky
+    iSeeSomething = (not . null . filter forVerticalLine) [minCol..maxCol] where
+      forVerticalLine c = (length . filter (\((c', _), _) -> c == c')) sky >= (maxRow - minRow + 1)
 
 -- | paint the lights on the sky :).
 paint :: Sky -> [String]
-paint sky = map paintLine [minX..maxX] where
-  ((minX, minY),(maxX, maxY)) = dimension sky
-  paintLine x = foldl paintLight "" [minY..maxY] where
-    paintLight line y
-      | isJust (S.findIndexL lightOn sky) = line ++ "*"
+paint sky = map paintLine [minRow..maxRow] where
+  ((minCol, maxCol),(minRow, maxRow)) = dimension sky
+  paintLine r = foldl paintLight "" [minCol..maxCol] where
+    paintLight line c
+      | isJust (find lightOn sky) = line ++ "*"
       | otherwise = line ++ " "
       where
-        lightOn ((x',y'),_) = x == x' && y == y'
+        lightOn ((c',r'),_) = c == c' && r == r'

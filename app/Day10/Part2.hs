@@ -8,7 +8,8 @@ import Day10
 
 -- | solve the puzzle
 solve :: Sky -> Int
-solve _ = 2
+solve sky = secs where
+  (secs, _) = night 0 sky
 
 -- | main
 main :: IO ()
