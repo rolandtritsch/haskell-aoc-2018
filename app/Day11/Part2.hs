@@ -7,11 +7,12 @@ import Control.Exception (evaluate)
 import Day11
 
 -- | solve the puzzle
-solve :: [String] -> Integer
-solve _ = 2
+solve :: SerialNumber -> (Coordinate, Int)
+solve serial = (coordinate, size) where
+  (coordinate, _, size) = largestTotalPowerLevel 300 $ buildPowerGrid serial
 
 -- | main
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day11: Chronal Charge: Part2: solve -> (%d, %f)\n" result time
+  printf "Day11: Chronal Charge: Part2: solve -> (%s, %f)\n" (show result) time
