@@ -24,8 +24,8 @@ run = hspec $ do
     it "should return the largest total power level (for the testcase(s))" $ do
       largestTotalPowerLevel 3 (buildPowerGrid 18) `shouldBe` ((33,45),29, 3)
       largestTotalPowerLevel 3 (buildPowerGrid 42) `shouldBe` ((21,61),30, 3)
-      largestTotalPowerLevel 300 (buildPowerGrid 18) `shouldBe` ((90,269),113, 16)
-      largestTotalPowerLevel 300 (buildPowerGrid 42) `shouldBe` ((232,251),119, 12)
+      largestTotalPowerLevel' 300 (buildPowerGrid' 18) `shouldBe` ((90,269),113, 16)
+      largestTotalPowerLevel' 300 (buildPowerGrid' 42) `shouldBe` ((232,251),119, 12)
 
   describe "solve - Part1" $ do
     it "should solve the puzzle" $ do
@@ -33,4 +33,4 @@ run = hspec $ do
 
   describe "solve - Part2" $ do
     it "should solve the puzzle" $ do
-      D11P2.solve input `shouldBe` ((0,0),0)
+      D11P2.solve input `shouldBe` ((224,222),27)

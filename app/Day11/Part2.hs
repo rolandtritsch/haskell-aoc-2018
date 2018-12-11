@@ -9,7 +9,7 @@ import Day11
 -- | solve the puzzle
 solve :: SerialNumber -> (Coordinate, Int)
 solve serial = (coordinate, size) where
-  (coordinate, _, size) = largestTotalPowerLevel 300 $ buildPowerGrid serial
+  (coordinate, _, size) = largestTotalPowerLevel' 300 $ buildPowerGrid' serial
 
 -- | main
 main :: IO ()

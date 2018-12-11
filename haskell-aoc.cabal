@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f6eedcbd524f8af7f9478460e4317392091828d1b9088224df6908a4df651f4d
+-- hash: ca1d7cfc4af6a31e26bf0de42442f3dee77381e5ee4a9a2df5d6bf5edb9c1b4f
 
 name:           haskell-aoc
 version:        0.1.0.0
@@ -40,6 +40,7 @@ library
       Day09
       Day10
       Day11
+      Day12
       Util
   other-modules:
       Paths_haskell_aoc
@@ -322,6 +323,28 @@ executable haskell-aoc-day11p2
     , timeit
   default-language: Haskell2010
 
+executable haskell-aoc-day12p1
+  main-is: app/Day12/Part1.hs
+  other-modules:
+      Paths_haskell_aoc
+  ghc-options: -main-is Day12.Part1.main -O2 -threaded -Wall -Werror
+  build-depends:
+      base >=4.7 && <5
+    , haskell-aoc
+    , timeit
+  default-language: Haskell2010
+
+executable haskell-aoc-day12p2
+  main-is: app/Day12/Part2.hs
+  other-modules:
+      Paths_haskell_aoc
+  ghc-options: -main-is Day12.Part2.main -O2 -threaded -Wall -Werror
+  build-depends:
+      base >=4.7 && <5
+    , haskell-aoc
+    , timeit
+  default-language: Haskell2010
+
 executable haskell-aoc-exe
   main-is: Main.hs
   other-modules:
@@ -349,6 +372,8 @@ executable haskell-aoc-exe
       Day10.Part2
       Day11.Part1
       Day11.Part2
+      Day12.Part1
+      Day12.Part2
       Paths_haskell_aoc
   hs-source-dirs:
       app
@@ -377,6 +402,7 @@ test-suite haskell-aoc-test
       Day09Spec
       Day10Spec
       Day11Spec
+      Day12Spec
       Day00.Part1
       Day00.Part2
       Day01.Part1
@@ -401,6 +427,8 @@ test-suite haskell-aoc-test
       Day10.Part2
       Day11.Part1
       Day11.Part2
+      Day12.Part1
+      Day12.Part2
       Main
       Paths_haskell_aoc
   hs-source-dirs:
@@ -622,6 +650,23 @@ test-suite haskell-aoc-test-day11
   build-depends:
       base >=4.7 && <5
     , containers
+    , haskell-aoc
+    , hspec
+    , timeit
+  default-language: Haskell2010
+
+test-suite haskell-aoc-test-day12
+  type: exitcode-stdio-1.0
+  main-is: Day12Spec.hs
+  other-modules:
+      Day12.Part1
+      Day12.Part2
+  hs-source-dirs:
+      test
+      app
+  ghc-options: -main-is Day12Spec.run -O2 -threaded -Wall -Werror
+  build-depends:
+      base >=4.7 && <5
     , haskell-aoc
     , hspec
     , timeit
