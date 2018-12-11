@@ -16,7 +16,7 @@ Part 2 - ???
 -}
 module Day07 where
 
-import Data.List ((\\), sort)
+import Data.List ((\\), sort, filter)
 import qualified Data.Map as M
 
 import Util (inputRaw)
@@ -66,23 +66,61 @@ buildEffort delay = foldl go M.empty (zip ['A'..'Z'] [(1+delay)..]) where
 
 -- | work through the steps (with the given number of workers and
 -- the given effort(s)) and return the number of seconds it took.
+--
+-- To elapse a second we need to ...
+--
+-- * take a look at what the work in progress and need to move
+-- the tasks that are done from wip to finished (and need to
+-- (re)sort finished.
+-- * we then take the head of finished and add it to done.
+-- * when then look for new tasks that can start (we add them to
+-- available).
+-- * we then take available tasks (we schedule tasks in order of
+-- arrival (not by alphabet); FIFO; and as many as we have workers)
+-- and add them to work in progress.
+-- * last but not least we "tick" (decrement the remaining effort
+-- by one) on all tasks that are work in progress and go to the
+-- next second.
+--
 -- Initially ...
 --
 -- * nothing is done
+-- * nothing is in progress
+-- * all of the workers are available to take on work
+-- * all of the roots are available to be schedule for work
 --
+-- We are done, when ...
 --
+-- * there are no more tasks available AND ...
+-- * work in progress is empty (again) AND ...
+-- * everything that was/is finished has been added to done
 --
-work :: Int -> Work -> Graph -> [Step] -> Int
-work ws effort (parents, children) roots = go 0 [] [] roots ws where
-  go secs done inProgress available workers
-    | null inProgress && null available = secs
-    | otherwise = go (secs + 1) (done ++ [head finished]) inProgress' available' workers'
+work :: Int -> Work -> Graph -> [Step] -> (Int, [Step])
+work ws effort (parents, children) roots = go 0 [] [] [] roots ws where
+  go :: Int -> [Step] -> [Step] -> [(Step, Duration)] -> [Step] -> Int -> (Int, [Step])
+  go secs done [] [] [] _ = (secs - 1, done)
+  go secs done finished wip available workers = go (secs + 1) done' finished''' (map tick wip') available' workers'
     where
-      inProgress' = M.elems effort
-      workers' = workers
-      available' = undefined
-      step = last done
-      finished = sort $ available ++ foldl qualified [] (M.findWithDefault [] step children \\ done) where
-        qualified qs s
-          | all (\p -> elem p done) (M.findWithDefault [] s parents) = qs ++ [s]
-          | otherwise = qs
+      finished'''
+        | null finished' = []
+        | otherwise = tail finished'
+      done'
+        | null finished' = done
+        | otherwise = done ++ [head finished']
+      finished' = sort $ finished ++ finished''
+      finished'' = map fst $ filter ((==) 0 . snd) wip
+      workers'' = workers + length finished''
+      available''
+        | null done' = available
+        | otherwise = sort $ available ++ foldl qualified [] (M.findWithDefault [] step children \\ (done' ++ (map fst $ wip)))
+        where
+          step = last done'
+          qualified qs s
+            | all (\p -> elem p done') (M.findWithDefault [] s parents) = qs ++ [s]
+            | otherwise = qs
+      availableForScheduling = take workers'' available''
+      workers' = workers'' - length availableForScheduling
+      wip' = filter ((/=) 0 . snd) wip ++ map schedule availableForScheduling where
+        schedule s = (s, effort M.! s)
+      available' = drop (length availableForScheduling) available''
+      tick (s, e) = (s, e-1)
