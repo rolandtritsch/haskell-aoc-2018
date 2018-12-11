@@ -42,11 +42,7 @@ buildPowerGrid serial = foldl setPowerLevelOfFuelCell M.empty coordinates where
   setPowerLevelOfFuelCell grid coordinate@(x, y) = M.insert coordinate powerLevel grid where
     powerLevel = hundredTh (((rackId * y) + serial) * rackId) - 5 where
       rackId = x + 10
-      hundredTh n
-        | length n' < 3 = 0
-        | otherwise = read [n' !! ((length n') - 3)]
-        where
-          n' = show n
+      hundredTh n = mod (div n 100) 10
 
 -- | return the largest power level (and its location) (up to the given max grid size).
 largestTotalPowerLevel :: Int -> Grid -> (Coordinate, PowerLevel, Int)
