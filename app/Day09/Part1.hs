@@ -19,4 +19,4 @@ solve game@(_, numberOfMarples) = highScore where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day09: Part1: Marble Mania: small -> (%d, %f)\n" result time
+  printf "Day09: Marble Mania: Part1: small -> (%d, %f)\n" result time

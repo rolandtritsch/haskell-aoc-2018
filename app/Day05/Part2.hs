@@ -20,4 +20,4 @@ solve p = minimum allReactionLengths where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day05: Part2: Alchemical Reduction: minLength -> (%d, %f)\n" result time
+  printf "Day05: Alchemical Reduction: Part2: minLength -> (%d, %f)\n" result time

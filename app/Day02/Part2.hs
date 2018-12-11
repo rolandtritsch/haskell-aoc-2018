@@ -27,4 +27,4 @@ solve boxIds = common where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day02: Part2: Inventory Management System: diffByOne -> (%s, %f)\n" result time
+  printf "Day02: Inventory Management System: Part2: diffByOne -> (%s, %f)\n" result time

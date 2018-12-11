@@ -15,4 +15,4 @@ solve sky = secs where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day10: Part2: The Stars Align: solve -> (%d, %f)\n" result time
+  printf "Day10: The Stars Align: Part2: secs -> (%d, %f)\n" result time

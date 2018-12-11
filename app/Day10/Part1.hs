@@ -15,4 +15,4 @@ solve sky = paint message where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day10: Part1: The Stars Align: message -> (%s, %f)\n" (show result) time
+  printf "Day10: The Stars Align: Part1: message -> (%s, %f)\n" (show result) time

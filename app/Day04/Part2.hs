@@ -15,4 +15,4 @@ solve rs = gid * minute where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day04: Part2: Repose Record: mostAsleepGidMinute -> (%d, %f)\n" result time
+  printf "Day04: Repose Record: Part2: mostAsleepGidMinute -> (%d, %f)\n" result time

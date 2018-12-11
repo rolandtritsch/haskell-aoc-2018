@@ -20,4 +20,4 @@ solve inputStream = go root where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day08: Part2: Memory Maneuver: indexSum -> (%d, %f)\n" result time
+  printf "Day08: Memory Maneuver: Part2: indexSum -> (%d, %f)\n" result time

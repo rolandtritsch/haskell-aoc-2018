@@ -18,4 +18,4 @@ solve cs = overlappingInches where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day03: Part1: No Matter How You Slice It: overlappingInches -> (%d, %f)\n" result time
+  printf "Day03: No Matter How You Slice It: Part1: overlappingInches -> (%d, %f)\n" result time

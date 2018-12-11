@@ -26,4 +26,4 @@ solve cs = nonOverlappingCid where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day03: Part2: No Matter How You Slice It: nonOverlappingCid -> (%d, %f)\n" result time
+  printf "Day03: No Matter How You Slice It: Part2: nonOverlappingCid -> (%d, %f)\n" result time

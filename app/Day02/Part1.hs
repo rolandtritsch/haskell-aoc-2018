@@ -19,4 +19,4 @@ solve boxIds = numberOfBoxesWithTwoLetters * numberOfBoxesWithThreeLetters where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day02: Part1: Inventory Management System: numberOfLetters -> (%d, %f)\n" result time
+  printf "Day02: Inventory Management System: Part1: numberOfLetters -> (%d, %f)\n" result time

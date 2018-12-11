@@ -17,4 +17,4 @@ solve rs = maxCid * bestMinute where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day04: Part1: Repose Record: mostAsleep -> (%d, %f)\n" result time
+  printf "Day04: Repose Record: Part1: mostAsleep -> (%d, %f)\n" result time

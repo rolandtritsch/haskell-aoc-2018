@@ -14,4 +14,4 @@ solve inputStream = (sum . fmap sum) $ createRootNode inputStream
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day08: Part1: Memory Maneuver: sum -> (%d, %f)\n" result time
+  printf "Day08: Memory Maneuver: Part1: sum -> (%d, %f)\n" result time

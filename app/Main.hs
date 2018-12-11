@@ -44,7 +44,7 @@ main = do
   D09P1.main
   --D09P2.main
   -- runs out of mem for/on eta.
-  putStrLn "TODO - Day09: Part2: dummy -> (0, 0)"
+  putStrLn "TODO - Day09: Dummy: Part2: dummy -> (0, 0)"
   D10P1.main
   D10P2.main
   D11P1.main

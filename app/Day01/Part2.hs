@@ -20,4 +20,4 @@ solve fs = go S.empty $ scanl (+) 0 (cycle fs) where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day01: Part2: Chronal Calibration: seenFrequencySums -> (%d, %f)\n" result time
+  printf "Day01: Chronal Calibration: Part2: seenFrequencySums -> (%d, %f)\n" result time
