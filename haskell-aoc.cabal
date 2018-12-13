@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ca1d7cfc4af6a31e26bf0de42442f3dee77381e5ee4a9a2df5d6bf5edb9c1b4f
+-- hash: bab5e4a4816e27987b716120a42587d47e6f447063655f85f4f5d9a4872ce164
 
 name:           haskell-aoc
 version:        0.1.0.0
@@ -48,7 +48,8 @@ library
       src
   ghc-options: -O2 -Wall -Werror
   build-depends:
-      base >=4.7 && <5
+      array
+    , base >=4.7 && <5
     , containers
     , split
   default-language: Haskell2010
@@ -667,6 +668,7 @@ test-suite haskell-aoc-test-day12
   ghc-options: -main-is Day12Spec.run -O2 -threaded -Wall -Werror
   build-depends:
       base >=4.7 && <5
+    , containers
     , haskell-aoc
     , hspec
     , timeit

@@ -7,11 +7,12 @@ import Control.Exception (evaluate)
 import Day12
 
 -- | solve the puzzle
-solve :: [String] -> Integer
-solve _ = 2
+solve :: (State, Notes) -> Int
+solve (state, notes) = gen + offset * constant where
+  (gen, offset, constant) = detectShortcut 50000000000 notes state
 
 -- | main
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day12: Template: Part2: solve -> (%d, %f)\n" result time
+  printf "Day12: Subterranean Sustainability: Part2: 50000000000 -> (%d, %f)\n" result time

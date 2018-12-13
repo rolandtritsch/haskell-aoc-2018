@@ -26,6 +26,7 @@ library:
   dependencies:
   - containers
   - split
+  - array
 
 executables:
   haskell-aoc-exe:
@@ -550,3 +551,4 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - containers

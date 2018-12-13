@@ -16,7 +16,7 @@ Part 2 - ???
 -}
 module Day07 where
 
-import Data.List ((\\), sort, filter)
+import Data.List ((\\), sort)
 import qualified Data.Map as M
 
 import Util (inputRaw)
