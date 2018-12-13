@@ -589,3 +589,4 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - containers

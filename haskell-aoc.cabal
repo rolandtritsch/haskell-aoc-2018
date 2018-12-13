@@ -1,10 +1,8 @@
-cabal-version: 1.12
-
--- This file has been generated from package.yaml by hpack version 0.31.0.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 41267ebe2d6ae13d393503010d53dfa369720c454473e82d41ef37e879012840
+-- hash: 8ef93d13fd6def3f688b8e847b76db95d9a1062cbb403e377175be72400aff8c
 
 name:           haskell-aoc
 version:        0.1.0.0
@@ -19,6 +17,7 @@ copyright:      2018 Roland Tritsch
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
+cabal-version:  >= 1.10
 extra-source-files:
     README.md
 
@@ -714,6 +713,7 @@ test-suite haskell-aoc-test-day13
   ghc-options: -main-is Day13Spec.run -O2 -threaded -Wall -Werror
   build-depends:
       base >=4.7 && <5
+    , containers
     , haskell-aoc
     , hspec
     , timeit

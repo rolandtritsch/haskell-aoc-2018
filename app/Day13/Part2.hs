@@ -1,17 +1,31 @@
 module Day13.Part2 where
 
+--import Debug.Trace
+
 import System.TimeIt (timeItT)
 import Text.Printf (printf)
 import Control.Exception (evaluate)
 
+import qualified Data.Map as M
+import qualified Data.Set as S
+
 import Day13
 
 -- | solve the puzzle
-solve :: [String] -> Integer
-solve _ = 2
+solve :: Tracks -> Position
+solve tracks = go carts [] where
+  (grid, carts) = buildGrid tracks
+  go carts' collisions'
+    -- | M.size carts' > 1 = trace ("*** - " ++ show (M.size carts')) $ traceShow carts' $ traceShow collisions' $ go (eliminate carts'' collisions'') (collisions' ++ collisions'')
+    -- | otherwise = trace ("*** - " ++ show (M.size carts')) $ traceShow carts' $ traceShow collisions' $ fst $ head $ M.toList carts'
+    | M.size carts' > 1 = go (eliminate carts'' collisions'') (collisions' ++ collisions'')
+    | otherwise = fst $ head $ M.toList carts'
+    where
+      (carts'', collisions'') = tick grid carts'
+      eliminate carts''' collisions''' = M.withoutKeys carts''' (S.fromList collisions''')
 
 -- | main
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day13: Template: Part2: solve -> (%d, %f)\n" result time
+  printf "Day13: Mine Cart Madness: Part2: final -> (%d, %f)\n" (show result) time
