@@ -7,11 +7,12 @@ import Control.Exception (evaluate)
 import Day14
 
 -- | solve the puzzle
-solve :: [String] -> Integer
-solve _ = 1
+solve :: String -> String
+solve target = hint target' (chocolate target') where
+  target' = read target
 
 -- | main
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day14: Template: Part1: solve -> (%d, %f)\n" result time
+  printf "Day14: Chocolate Charts: Part1: hint -> (%s, %f)\n" result time

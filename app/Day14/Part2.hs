@@ -7,11 +7,12 @@ import Control.Exception (evaluate)
 import Day14
 
 -- | solve the puzzle
-solve :: [String] -> Integer
-solve _ = 2
+solve :: String -> Int
+solve target = gluehwein target' where
+  target' = map (read . (:"")) target
 
 -- | main
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day14: Template: Part2: solve -> (%d, %f)\n" result time
+  printf "Day14: Chocolate Charts: Part2: solve -> (%d, %f)\n" result time

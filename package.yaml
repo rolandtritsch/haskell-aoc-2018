@@ -27,6 +27,7 @@ library:
   - containers
   - split
   - array
+  - vector
 
 executables:
   haskell-aoc-exe:

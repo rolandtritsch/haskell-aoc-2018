@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 667b691346b78961cbae1a233a449c39d8d90a7ecc3a1ed89cd3b78a7079a5f6
+-- hash: 3992e8b8c3513f674b607caf395850996d24c32608edfc0efa40064a863edfa4
 
 name:           haskell-aoc
 version:        0.1.0.0
@@ -53,6 +53,7 @@ library
     , base >=4.7 && <5
     , containers
     , split
+    , vector
   default-language: Haskell2010
 
 executable haskell-aoc-day00p1
