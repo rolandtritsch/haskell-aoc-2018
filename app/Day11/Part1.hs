@@ -15,4 +15,4 @@ solve serial = coordinate where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day11: Chronal Charge: Part1: solve -> (%s, %f)\n" (show result) time
+  printf "Day11: Chronal Charge: Part1: coordinate -> (%s, %f)\n" (show result) time

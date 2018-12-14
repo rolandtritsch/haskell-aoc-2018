@@ -28,4 +28,4 @@ solve tracks = go carts [] where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day13: Mine Cart Madness: Part2: final -> (%d, %f)\n" (show result) time
+  printf "Day13: Mine Cart Madness: Part2: final -> (%s, %f)\n" (show result) time

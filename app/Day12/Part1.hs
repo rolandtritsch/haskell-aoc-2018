@@ -15,4 +15,4 @@ solve (state, notes) = sumOfPotNumbers finalState where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day12: Subterranean Sustainability: Part1: solve -> (%d, %f)\n" result time
+  printf "Day12: Subterranean Sustainability: Part1: 20 -> (%d, %f)\n" result time
