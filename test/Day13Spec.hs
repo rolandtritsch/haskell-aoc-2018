@@ -17,6 +17,10 @@ run = hspec $ do
 
   let testInput2 = inputRaw "input/Day13test2.txt"
 
+  let input2 = inputRaw "input/Day13input2.txt"
+  let input3 = inputRaw "input/Day13input3.txt"
+  let input4 = inputRaw "input/Day13input4.txt"
+
   describe "input" $ do
     it "should return the input" $ do
       head input `shouldBe` "                                          /------------\\ /-------------------------------------------------------------------------------\\            "
@@ -35,6 +39,9 @@ run = hspec $ do
   describe "solve - Part1" $ do
     it "should return the right result(s) for the testcases" $ do
       D13P1.solve testInput `shouldBe` Position 3 7
+      D13P1.solve input2 `shouldBe` Position 49 83
+      D13P1.solve input3 `shouldBe` Position 138 115
+      D13P1.solve input4 `shouldBe` Position 54 50
 
     it "should solve the puzzle" $ do
       D13P1.solve input `shouldBe` Position 36 136
@@ -42,6 +49,7 @@ run = hspec $ do
   describe "solve - Part2" $ do
     it "should return the right result(s) for the testcases" $ do
       D13P2.solve testInput2 `shouldBe` Position 4 6
+      D13P2.solve input4 `shouldBe` Position 100 50
 
     it "should solve the puzzle" $ do
-      D13P2.solve input `shouldBe` Position 8 93 -- wrong answer
+      D13P2.solve input `shouldBe` Position 111 53
