@@ -15,4 +15,4 @@ solve target = gluehwein target' where
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day14: Chocolate Charts: Part2: solve -> (%d, %f)\n" result time
+  printf "Day14: Chocolate Charts: Part2: find -> (%d, %f)\n" result time
