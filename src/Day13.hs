@@ -55,8 +55,12 @@ buildGrid tracks = foldl process (M.empty, M.empty) (zip [0..] tracks) where
 -- What are the cases to consider ...
 --
 -- 1. before tick ->-<-; during tick --><-; after tick --X--; collision on 2
+--   1. do not add the current cart and remove the other cart in current carts
 -- 2. before tick -><-; during tick --X-; after tick -<>-; collision on 2 (not 1)
--- 3. before tick ->>-; during tick --X-; after tick -->>; NOT a collision
+--   1. do not add the current cart and remove the other cart from previous carts
+-- 3. before tick ->>-; during tick --X-; after tick -->>; collision on 2
+--   1. do not add the current cart and remove the other cart from previous carts
+-- 3. before tick -<<-; during tick <-<-; after tick <<--; NO collision
 --
 -- Also note that ...
 --
@@ -70,14 +74,15 @@ buildGrid tracks = foldl process (M.empty, M.empty) (zip [0..] tracks) where
 tick :: Grid -> Carts -> (Carts, [Position])
 tick grid carts = (carts', collisions') where
   (carts', collisions') = M.foldlWithKey move (M.empty, []) carts where
-    addCollision p cos cs carts''
+    checkForCollison p cs = M.member p cs
+    checkForCollison' p cos = elem p cos
+{-    addCollision p cos cs carts''
       | M.member p cs = p : cos -- detect 1
-      | M.member p cs && M.member p carts'' && d' /= d'' = p : cos -- detect 2, but ignore 3
+      | M.member p carts'' = p : cos -- detect 2 and 3
       | otherwise = cos
-      where
-        (d', _) = cs M.! p
-        (d'', _) = carts'' M.! p
-    turn d p i cs cos = (M.insert p (d, i) cs, addCollision p cos cs carts)
+-}
+    --turn d p i cs cos = (M.insert p (d, i) cs, addCollision p cos cs carts)
+    turn d p i cs = M.insert p (d, i) cs
     d4i Up' i
       | mod i 3 == 0 = Left'
       | mod i 3 == 1 = Up'
@@ -95,31 +100,43 @@ tick grid carts = (carts', collisions') where
       | mod i 3 == 1 = Right'
       | mod i 3 == 2 = Down'
     d4i _ _ = error "d4i: Unexpected pattern match"
-    move (cs, cos) (Position row col) (Up', i)
-      | grid M.! p' == TurnSlash = turn Right' p' i cs cos
-      | grid M.! p' == TurnBackslash = turn Left' p' i cs cos
-      | grid M.! p' == Intersection = turn (d4i Up' i) p' (i + 1) cs cos
-      | otherwise = turn Up' p' i cs cos
+    move (cs, cos) p@(Position row col) (Up', i)
+      | checkForCollison p' carts = (cs, p' : cos)
+      | checkForCollison p' cs = (M.delete p' cs, p' : cos)
+      | checkForCollison' p cos = (cs, cos)
+      | grid M.! p' == TurnSlash = (turn Right' p' i cs, cos)
+      | grid M.! p' == TurnBackslash = (turn Left' p' i cs, cos)
+      | grid M.! p' == Intersection = (turn (d4i Up' i) p' (i + 1) cs, cos)
+      | otherwise = (turn Up' p' i cs, cos)
       where
         p' = Position (row - 1) col
-    move (cs, cos) (Position row col) (Down', i)
-      | grid M.! p' == TurnSlash = turn Left' p' i cs cos
-      | grid M.! p' == TurnBackslash = turn Right' p' i cs cos
-      | grid M.! p' == Intersection = turn (d4i Down' i) p' (i + 1) cs cos
-      | otherwise = turn Down' p' i cs cos
+    move (cs, cos) p@(Position row col) (Down', i)
+      | checkForCollison p' carts = (cs, p' : cos)
+      | checkForCollison p' cs = (M.delete p' cs, p' : cos)
+      | checkForCollison' p cos = (cs, cos)
+      | grid M.! p' == TurnSlash = (turn Left' p' i cs, cos)
+      | grid M.! p' == TurnBackslash = (turn Right' p' i cs, cos)
+      | grid M.! p' == Intersection = (turn (d4i Down' i) p' (i + 1) cs, cos)
+      | otherwise = (turn Down' p' i cs, cos)
       where
         p' = Position (row + 1) col
-    move (cs, cos) (Position row col) (Left', i)
-      | grid M.! p' == TurnSlash = turn Down' p' i cs cos
-      | grid M.! p' == TurnBackslash = turn Up' p' i cs cos
-      | grid M.! p' == Intersection = turn (d4i Left' i) p' (i + 1) cs cos
-      | otherwise = turn Left' p' i cs cos
+    move (cs, cos) p@(Position row col) (Left', i)
+      | checkForCollison p' carts = (cs, p' : cos)
+      | checkForCollison p' cs = (M.delete p' cs, p' : cos)
+      | checkForCollison' p cos = (cs, cos)
+      | grid M.! p' == TurnSlash = (turn Down' p' i cs, cos)
+      | grid M.! p' == TurnBackslash = (turn Up' p' i cs, cos)
+      | grid M.! p' == Intersection = (turn (d4i Left' i) p' (i + 1) cs, cos)
+      | otherwise = (turn Left' p' i cs, cos)
       where
         p' = Position row (col - 1)
-    move (cs, cos) (Position row col) (Right', i)
-      | grid M.! p' == TurnSlash = turn Up' p' i cs cos
-      | grid M.! p' == TurnBackslash = turn Down' p' i cs cos
-      | grid M.! p' == Intersection = turn (d4i Right' i) p' (i + 1) cs cos
-      | otherwise = turn Right' p' i cs cos
+    move (cs, cos) p@(Position row col) (Right', i)
+      | checkForCollison p' carts = (cs, p' : cos)
+      | checkForCollison p' cs = (M.delete p' cs, p' : cos)
+      | checkForCollison' p cos = (cs, cos)
+      | grid M.! p' == TurnSlash = (turn Up' p' i cs, cos)
+      | grid M.! p' == TurnBackslash = (turn Down' p' i cs, cos)
+      | grid M.! p' == Intersection = (turn (d4i Right' i) p' (i + 1) cs, cos)
+      | otherwise = (turn Right' p' i cs, cos)
       where
         p' = Position row (col + 1)

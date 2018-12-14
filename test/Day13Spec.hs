@@ -44,4 +44,4 @@ run = hspec $ do
       D13P2.solve testInput2 `shouldBe` Position 4 6
 
     it "should solve the puzzle" $ do
-      D13P2.solve input `shouldBe` Position 83 121 -- wrong answer
+      D13P2.solve input `shouldBe` Position 8 93 -- wrong answer
