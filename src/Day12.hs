@@ -3,22 +3,36 @@ Problem: <https://adventofcode.com/2018/day/12>
 
 Solution:
 
-General - ???
+General - Tricky. Had a hard time to get the datastructure right.
+Tried List, Array, Sequence, but settled on a Map (again).
 
-Part 1 - ???
+That map can grow into both directions. With every evolution
+I am checking for the smallest and the biggest pod and add two
+empty pods on both sides (to make sure we can match the start
+and end of the pods with the notes/rules).
 
-Part 2 - ???
+Note: To make "....#" match you need 4 false pod holes at the
+beginning of the list. I am adding 2, but I am also doing a/the
+findWithDefault to "generate" other 2.
+
+Part 1 - Easy. Just get all of the pod hole numbers that are
+alive/inhabited and sum them up.
+
+Part 2 - Hard. Had to get a/the clue on reddit. The sumOfPotNumbers
+is a polynom. You *just* need to find the numbers that define
+the polynom.
 -}
 module Day12 where
 
---import Data.List (nub)
+import Data.List (nub)
 import Data.List.Split (splitOneOf)
 import qualified Data.Map as M
 
 import Util (inputRaw)
 
+type Pod = Int
 type Note = [Bool]
-type State = M.Map Int Bool
+type State = M.Map Pod Bool
 type Notes = M.Map Note Bool
 
 -- | read the input file
@@ -68,11 +82,9 @@ sumOfPotNumbers state = sum $ M.keys $ M.filter id state
 -- the result is the number of generations it takes to reach that constant
 -- and what the constant is.
 detectShortcut :: Int -> Notes -> State -> (Int, Int, Int)
-detectShortcut _ _ _ = (5629, 49999999901, 62)
-{-
 detectShortcut gen notes state = go [] gen state where
   go stack' gen' state'
-    | lastTenDiffsAreTheSame = (gen', (stack' !! 0) - (stack' !! 1))
+    | lastTenDiffsAreTheSame = (stack' !! 10, gen' + 11, (stack' !! 0) - (stack' !! 1))
     | otherwise = go ((sumOfPotNumbers state') : stack') (gen' - 1) (evolve notes state')
     where
       lastTenDiffsAreTheSame
@@ -85,4 +97,3 @@ detectShortcut gen notes state = go [] gen state where
             slide2 _ = [[0,0]]
             diffPair (g:g':[]) = g' - g
             diffPair _ = error "diffPair: Unexpected pattern match."
--}

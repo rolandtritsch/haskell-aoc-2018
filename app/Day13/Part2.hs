@@ -1,6 +1,6 @@
 module Day13.Part2 where
 
-import Debug.Trace
+--import Debug.Trace
 
 import System.TimeIt (timeItT)
 import Text.Printf (printf)
@@ -19,7 +19,7 @@ solve tracks = go carts [] where
     -- | M.size carts' > 1 = trace ("*** - " ++ show (M.size carts')) $ traceShow carts' $ traceShow collisions' $ go (eliminate carts'' collisions'') (collisions' ++ collisions'')
     -- | otherwise = trace ("*** - " ++ show (M.size carts')) $ traceShow carts' $ traceShow collisions' $ fst $ head $ M.toList carts'
     | M.size carts' > 1 = go carts'' (collisions' ++ collisions'')
-    | otherwise = traceShow collisions' $ head $ M.keys carts'
+    | otherwise = head $ M.keys carts'
     where
       (carts'', collisions'') = tick grid carts'
 

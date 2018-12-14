@@ -36,7 +36,7 @@ run = hspec $ do
 
   describe "detectShortcut" $ do
     it "should return the right shortcut" $ do
-      detectShortcut 200 (snd input) (fst input) `shouldBe` (5629, 49999999901, 62)
+      detectShortcut 50000000000 (snd input) (fst input) `shouldBe` (5629, 49999999901, 62)
 
   describe "solve - Part1" $ do
     it "should return the right result(s) for the testcases" $ do

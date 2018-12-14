@@ -76,12 +76,6 @@ tick grid carts = (carts', collisions') where
   (carts', collisions') = M.foldlWithKey move (M.empty, []) carts where
     checkForCollison p cs = M.member p cs
     checkForCollison' p cos = elem p cos
-{-    addCollision p cos cs carts''
-      | M.member p cs = p : cos -- detect 1
-      | M.member p carts'' = p : cos -- detect 2 and 3
-      | otherwise = cos
--}
-    --turn d p i cs cos = (M.insert p (d, i) cs, addCollision p cos cs carts)
     turn d p i cs = M.insert p (d, i) cs
     d4i Up' i
       | mod i 3 == 0 = Left'
