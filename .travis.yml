@@ -29,6 +29,10 @@ before_install:
 script:
   - travis_wait 60 ./bin/run.sh
 
+branches:
+  only:
+    - master
+
 env:
   - DAY=00 PART=1 TYPE=EXE LANG=HASKELL
   - DAY=00 PART=2 TYPE=EXE LANG=HASKELL
