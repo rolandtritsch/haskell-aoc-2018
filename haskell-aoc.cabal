@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8ab447b96a68174e6839a17e55df616232be44e9467a2819b8177e382db955d6
+-- hash: ed89c8baab959c1e345b6ac1579310b64f673423ab8850e4b7f156324ef8ea4a
 
 name:           haskell-aoc
 version:        0.1.0.0
@@ -43,6 +43,7 @@ library
       Day13
       Day14
       Day15
+      Day16
       Util
   other-modules:
       Paths_haskell_aoc
@@ -417,6 +418,28 @@ executable haskell-aoc-day15p2
     , timeit
   default-language: Haskell2010
 
+executable haskell-aoc-day16p1
+  main-is: app/Day16/Part1.hs
+  other-modules:
+      Paths_haskell_aoc
+  ghc-options: -main-is Day16.Part1.main -O2 -threaded -Wall -Werror
+  build-depends:
+      base >=4.7 && <5
+    , haskell-aoc
+    , timeit
+  default-language: Haskell2010
+
+executable haskell-aoc-day16p2
+  main-is: app/Day16/Part2.hs
+  other-modules:
+      Paths_haskell_aoc
+  ghc-options: -main-is Day16.Part2.main -O2 -threaded -Wall -Werror
+  build-depends:
+      base >=4.7 && <5
+    , haskell-aoc
+    , timeit
+  default-language: Haskell2010
+
 executable haskell-aoc-exe
   main-is: Main.hs
   other-modules:
@@ -452,6 +475,8 @@ executable haskell-aoc-exe
       Day14.Part2
       Day15.Part1
       Day15.Part2
+      Day16.Part1
+      Day16.Part2
       Paths_haskell_aoc
   hs-source-dirs:
       app
@@ -484,6 +509,7 @@ test-suite haskell-aoc-test
       Day13Spec
       Day14Spec
       Day15Spec
+      Day16Spec
       Day00.Part1
       Day00.Part2
       Day01.Part1
@@ -516,6 +542,8 @@ test-suite haskell-aoc-test
       Day14.Part2
       Day15.Part1
       Day15.Part2
+      Day16.Part1
+      Day16.Part2
       Main
       Paths_haskell_aoc
   hs-source-dirs:
@@ -805,6 +833,23 @@ test-suite haskell-aoc-test-day15
       test
       app
   ghc-options: -main-is Day15Spec.run -O2 -threaded -Wall -Werror
+  build-depends:
+      base >=4.7 && <5
+    , haskell-aoc
+    , hspec
+    , timeit
+  default-language: Haskell2010
+
+test-suite haskell-aoc-test-day16
+  type: exitcode-stdio-1.0
+  main-is: Day16Spec.hs
+  other-modules:
+      Day16.Part1
+      Day16.Part2
+  hs-source-dirs:
+      test
+      app
+  ghc-options: -main-is Day16Spec.run -O2 -threaded -Wall -Werror
   build-depends:
       base >=4.7 && <5
     , haskell-aoc
