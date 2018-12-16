@@ -66,6 +66,8 @@ main = do
   D13P1.main
   D13P2.main
   D14P1.main
-  D14P2.main
+  --D14P2.main
+  -- runs out of mem for/on eta.
+  putStrLn "TODO - Day14: Dummy: Part2: dummy -> (0, 0)"
   D15P1.main
   D15P2.main
