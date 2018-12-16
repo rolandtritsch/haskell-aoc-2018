@@ -29,5 +29,5 @@ run = hspec $ do
       D14P2.solve "92510" `shouldBe` 18
       D14P2.solve "59414" `shouldBe` 2018
 
-    --it "should solve the puzzle" $ do
-      --D14P2.solve input `shouldBe` 2
+    it "should solve the puzzle" $ do
+      D14P2.solve input `shouldBe` 20258123

@@ -8,7 +8,7 @@ import Day14
 
 -- | solve the puzzle
 solve :: String -> Int
-solve target = gluehwein target' where
+solve target = gluehwein' target' where
   target' = map (read . (:"")) target
 
 -- | main
