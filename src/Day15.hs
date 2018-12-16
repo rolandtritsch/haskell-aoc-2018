@@ -74,22 +74,61 @@ initialBattleground rows = (M.fromList fields, M.fromList units) where
       map' _ = error "prepare: Unexpected pattern match."
 
 -- | move a unit. But only, if the unit is not already in an attack position.
-move :: Units -> Units -> Position -> Unit -> Units
-move previousUnits currentUnits position unit
-  | isNothing $ checkForTarget previousUnits position = currentUnits
-  | otherwise = M.insert nextPosition unit currentUnits
+move :: BattleGround -> Units -> Position -> Unit -> Units
+move bg@(_, units) currentUnits position unit
+  | isNothing $ checkForTarget units position = currentUnits
+  | otherwise = M.insert (nextPosition bg position) unit currentUnits
+
+-- | given a position, determine the next position to go to.
+--
+-- This is tricky ...
+--
+-- 1. we need to find all foes that are reachable (means we can get to it without
+-- going through a wall or an elf or a goblin :)).
+-- 2. then for all 4 direction positions we need to calc the manhatten distance to all of
+-- these foes (nextPos, distance).
+-- 3. then we need to find the nextPos with the smallest distance (and if there is more
+-- than one pick, the smallest position).
+nextPosition :: BattleGround -> Position -> Position
+nextPosition (fields, units) position = fst $ head $ sort $ filter ((==) minDistance . snd) $ distances where
+  allDirections
+    = [moveNorth position]
+    ++ [moveSouth position]
+    ++ [moveWest position]
+    ++ [moveEast position]
+  allAvailableDirections = filter (\p -> fields M.! p == Open) allDirections
+  (Unit utype _ _) = units M.! position
+  allReachableFoes
+    = go [] (moveNorth position)
+    ++ go [] (moveSouth position)
+    ++ go [] (moveWest position)
+    ++ go [] (moveEast position)
     where
-      nextPosition = position -- TODO :)
+      go alreadyFoundFoePositions position'
+        | elem position' alreadyFoundFoePositions = alreadyFoundFoePositions
+        | fields M.! position' == Wall = alreadyFoundFoePositions
+        | M.member position' units && utype == utype' = alreadyFoundFoePositions
+        | M.member position' units && utype /= utype' = position : alreadyFoundFoePositions
+        | otherwise
+          = go alreadyFoundFoePositions (moveNorth position)
+          ++ go alreadyFoundFoePositions (moveSouth position)
+          ++ go alreadyFoundFoePositions (moveWest position)
+          ++ go alreadyFoundFoePositions (moveEast position)
+        where
+          (Unit utype' _ _) = units M.! position'
+  distances = [(p, distance p p') | p <- allAvailableDirections, p' <- allReachableFoes] where
+    distance (r, c) (r', c') = abs (r - r') + abs (c - c')
+  minDistance = minimum $ map snd distances
 
 -- | attack a unit (if there is on to attack).
-attack :: Units -> Units -> Position -> Unit -> Units
-attack previousUnits currentUnits position unit = attack' (checkForTarget previousUnits position) where
+attack :: BattleGround -> Units -> Position -> Unit -> Units
+attack (_, units) currentUnits position unit = attack' (checkForTarget units position) where
   attack' Nothing = M.insert position unit currentUnits
   attack' (Just attackPosition)
     | killedIt attackUnit unit = M.insert position unit currentUnits
     | otherwise = M.insert position unit $ M.insert attackPosition (tookAHit attackUnit unit) currentUnits
     where
-      attackUnit = previousUnits M.! attackPosition
+      attackUnit = units M.! attackPosition
       killedIt (Unit _ _ h) (Unit _ p' _) = (h - p') <= 0
       tookAHit (Unit t p h) (Unit _ p' _) = Unit t p (h - p')
 
@@ -115,9 +154,9 @@ checkForTarget units position = headMay $ sort $ map fst availableTargets where
 
 -- | return the next round. Move all units (and/or execute an attack).
 nextRound :: BattleGround -> BattleGround
-nextRound (fields, units) = (fields, nextUnits) where
-  nextUnits = M.foldlWithKey (attack units) M.empty nextPositions
-  nextPositions = M.foldlWithKey (move units) M.empty units
+nextRound bg@(fields, units) = (fields, nextUnits) where
+  nextUnits = M.foldlWithKey (attack bg) M.empty nextPositions
+  nextPositions = M.foldlWithKey (move bg) M.empty units
 
 -- | moving around.
 moveNorth, moveSouth, moveEast, moveWest :: Position -> Position
