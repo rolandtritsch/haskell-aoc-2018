@@ -1,5 +1,7 @@
 module Day15Spec where
 
+import qualified Data.Map as M
+
 import Test.Hspec
 
 import Day15
@@ -10,8 +12,13 @@ run :: IO ()
 run = hspec $ do
   describe "input" $ do
     it "should return the input" $ do
-      head input `shouldBe` "Hello"
-      last input `shouldBe` "World"
+      head input `shouldBe` "################################"
+      last input `shouldBe` "################################"
+
+  describe "prepare" $ do
+    it "should return the battleground" $ do
+      (snd $ initialBattleground input) M.! (2,11) `shouldBe` Unit Goblin 3 200
+      (snd $ initialBattleground input) M.! (5,22) `shouldBe` Unit Elf 3 200
 
   describe "solve - Part1" $ do
     it "should return the right result(s) for the testcases" $ do

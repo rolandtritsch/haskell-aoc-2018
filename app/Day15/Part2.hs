@@ -14,4 +14,4 @@ solve _ = 2
 main :: IO ()
 main = do
   (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day15: Template: Part2: solve -> (%d, %f)\n" result time
+  printf "Day15: Beverage Bandits: Part2: solve -> (%d, %f)\n" result time

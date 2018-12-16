@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8ab447b96a68174e6839a17e55df616232be44e9467a2819b8177e382db955d6
+-- hash: 643d6b3ad771116744acac053fd227137513a62521fde931f81dcf3dfbf3af65
 
 name:           haskell-aoc
 version:        0.1.0.0
@@ -53,6 +53,7 @@ library
       array
     , base >=4.7 && <5
     , containers
+    , safe
     , split
     , vector
   default-language: Haskell2010
@@ -807,6 +808,7 @@ test-suite haskell-aoc-test-day15
   ghc-options: -main-is Day15Spec.run -O2 -threaded -Wall -Werror
   build-depends:
       base >=4.7 && <5
+    , containers
     , haskell-aoc
     , hspec
     , timeit
