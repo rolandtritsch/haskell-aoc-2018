@@ -30,8 +30,11 @@ Part 2 - ???
 -}
 module Day15 where
 
+import Debug.Trace
+--import Text.Printf
+
 import Data.List (sort)
-import Data.Maybe (isJust, isNothing, fromJust)
+import Data.Maybe (isJust, fromJust)
 import Safe (headMay)
 import qualified Data.Map as M
 
@@ -76,7 +79,7 @@ initialBattleground rows = (M.fromList fields, M.fromList units) where
 -- | move a unit. But only, if the unit is not already in an attack position.
 move :: BattleGround -> Units -> Position -> Unit -> Units
 move bg@(_, units) currentUnits position unit
-  | isNothing $ checkForTarget units position = currentUnits
+  | isJust $ checkForTarget units position = currentUnits
   | otherwise = M.insert (nextPosition bg position) unit currentUnits
 
 -- | given a position, determine the next position to go to.
@@ -89,8 +92,10 @@ move bg@(_, units) currentUnits position unit
 -- these foes (nextPos, distance).
 -- 3. then we need to find the nextPos with the smallest distance (and if there is more
 -- than one pick, the smallest position).
+--
 nextPosition :: BattleGround -> Position -> Position
-nextPosition (fields, units) position = fst $ head $ sort $ filter ((==) minDistance . snd) $ distances where
+nextPosition (fields, units) position = trace "***" $ traceShow position $ traceShow np $ traceShow distances $ np where
+  np = fst $ head $ sort $ filter ((==) minDistance . snd) $ distances
   allDirections
     = [moveNorth position]
     ++ [moveSouth position]
@@ -98,22 +103,19 @@ nextPosition (fields, units) position = fst $ head $ sort $ filter ((==) minDist
     ++ [moveEast position]
   allAvailableDirections = filter (\p -> fields M.! p == Open) allDirections
   (Unit utype _ _) = units M.! position
-  allReachableFoes
-    = go [] (moveNorth position)
-    ++ go [] (moveSouth position)
-    ++ go [] (moveWest position)
-    ++ go [] (moveEast position)
-    where
-      go alreadyFoundFoePositions position'
-        | elem position' alreadyFoundFoePositions = alreadyFoundFoePositions
-        | fields M.! position' == Wall = alreadyFoundFoePositions
-        | M.member position' units && utype == utype' = alreadyFoundFoePositions
-        | M.member position' units && utype /= utype' = position : alreadyFoundFoePositions
-        | otherwise
-          = go alreadyFoundFoePositions (moveNorth position)
-          ++ go alreadyFoundFoePositions (moveSouth position)
-          ++ go alreadyFoundFoePositions (moveWest position)
-          ++ go alreadyFoundFoePositions (moveEast position)
+  allReachableFoes = go [] [] position where
+    go alreadySeenPositions alreadyFoundFoePositions position'
+      | elem position' alreadySeenPositions = alreadyFoundFoePositions
+      | elem position' alreadyFoundFoePositions = alreadyFoundFoePositions
+      | fields M.! position' == Wall = alreadyFoundFoePositions
+      | M.member position' units && utype == utype' && position /= position' = alreadyFoundFoePositions
+      | M.member position' units && utype /= utype' = position' : alreadyFoundFoePositions
+      | fields M.! position' == Open = trace "---" $ traceShow position' $ traceShow alreadyFoundFoePositions $ traceShow alreadySeenPositions
+        $ go (position':alreadySeenPositions) alreadyFoundFoePositions (moveNorth position')
+        ++ go (position':alreadySeenPositions) alreadyFoundFoePositions (moveSouth position')
+        ++ go (position':alreadySeenPositions) alreadyFoundFoePositions (moveWest position')
+        ++ go (position':alreadySeenPositions) alreadyFoundFoePositions (moveEast position')
+      | otherwise = error ("nextPosition: go: Unexpected pattern match: " ++ show position')
         where
           (Unit utype' _ _) = units M.! position'
   distances = [(p, distance p p') | p <- allAvailableDirections, p' <- allReachableFoes] where
@@ -155,8 +157,9 @@ checkForTarget units position = headMay $ sort $ map fst availableTargets where
 -- | return the next round. Move all units (and/or execute an attack).
 nextRound :: BattleGround -> BattleGround
 nextRound bg@(fields, units) = (fields, nextUnits) where
-  nextUnits = M.foldlWithKey (attack bg) M.empty nextPositions
-  nextPositions = M.foldlWithKey (move bg) M.empty units
+  nextUnits = trace "+++" $ traceShow units $ M.foldlWithKey (move bg) M.empty units
+  --nextUnits = M.foldlWithKey (attack bg) M.empty nextPositions
+  --nextPositions = M.foldlWithKey (move bg) M.empty units
 
 -- | moving around.
 moveNorth, moveSouth, moveEast, moveWest :: Position -> Position
