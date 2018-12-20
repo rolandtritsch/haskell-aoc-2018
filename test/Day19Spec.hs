@@ -1,5 +1,8 @@
 module Day19Spec where
 
+import Text.Megaparsec (parse)
+import Test.Hspec.Megaparsec (parseSatisfies)
+
 import Test.Hspec
 
 import Day19
@@ -10,8 +13,12 @@ run :: IO ()
 run = hspec $ do
   describe "input" $ do
     it "should return the input" $ do
-      head input `shouldBe` "Hello"
-      last input `shouldBe` "World"
+      head input `shouldBe` "#ip 4"
+      last input `shouldBe` "seti 0 7 4"
+
+  describe "parse" $ do
+    it "should parse the program" $ do
+      parse parseProgram "" input1 `parseSatisfies` ((==) 36 . length . snd)
 
   describe "solve - Part1" $ do
     it "should return the right result(s) for the testcases" $ do

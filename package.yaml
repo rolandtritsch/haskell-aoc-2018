@@ -926,6 +926,8 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day20:
     main: Day20Spec.hs
