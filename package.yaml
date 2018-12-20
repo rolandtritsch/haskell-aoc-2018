@@ -28,6 +28,7 @@ library:
   - split
   - array
   - vector
+  - safe
 
 executables:
   haskell-aoc-exe:
@@ -667,3 +668,4 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - containers
