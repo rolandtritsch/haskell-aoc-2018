@@ -173,6 +173,18 @@ env:
 
 matrix:
   exclude:
+    - env: DAY=00
+    - env: DAY=01
+    - env: DAY=02
+    - env: DAY=03
+    - env: DAY=04
+    - env: DAY=05
+    - env: DAY=06
+    - env: DAY=07
+    - env: DAY=08
     - env: DAY=09 PART=2 TYPE=TEST LANG=ETA
     - env: DAY=10 PART=1 TYPE=TEST LANG=ETA
     - env: DAY=10 PART=2 TYPE=TEST LANG=ETA
+    - env: DAY=11
+    - env: DAY=12
+    - env: DAY=13
