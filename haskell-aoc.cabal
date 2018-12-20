@@ -1,8 +1,10 @@
--- This file has been generated from package.yaml by hpack version 0.28.2.
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8ab447b96a68174e6839a17e55df616232be44e9467a2819b8177e382db955d6
+-- hash: 40d14eb0bf695a6a5af0f82ae54865e1534de9780279d80529742ebbea0c1224
 
 name:           haskell-aoc
 version:        0.1.0.0
@@ -17,7 +19,6 @@ copyright:      2018 Roland Tritsch
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
-cabal-version:  >= 1.10
 extra-source-files:
     README.md
 
