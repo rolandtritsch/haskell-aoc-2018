@@ -14,7 +14,7 @@ jobs:
           command: stack setup
       - run:
           name: Run tests
-          command: stack test
+          command: stack build :haskell-aoc-test
           no_output_timeout: 60m
       - run:
           name: Run exe

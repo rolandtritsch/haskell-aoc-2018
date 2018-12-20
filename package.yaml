@@ -394,6 +394,166 @@ executables:
     - haskell-aoc
     - timeit
 
+  haskell-aoc-day17p1:
+    main: app/Day17/Part1.hs
+    ghc-options:
+    - -main-is Day17.Part1.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day17p2:
+    main: app/Day17/Part2.hs
+    ghc-options:
+    - -main-is Day17.Part2.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day18p1:
+    main: app/Day18/Part1.hs
+    ghc-options:
+    - -main-is Day18.Part1.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day18p2:
+    main: app/Day18/Part2.hs
+    ghc-options:
+    - -main-is Day18.Part2.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day19p1:
+    main: app/Day19/Part1.hs
+    ghc-options:
+    - -main-is Day19.Part1.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day19p2:
+    main: app/Day19/Part2.hs
+    ghc-options:
+    - -main-is Day19.Part2.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day20p1:
+    main: app/Day20/Part1.hs
+    ghc-options:
+    - -main-is Day20.Part1.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day20p2:
+    main: app/Day20/Part2.hs
+    ghc-options:
+    - -main-is Day20.Part2.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day21p1:
+    main: app/Day21/Part1.hs
+    ghc-options:
+    - -main-is Day21.Part1.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day21p2:
+    main: app/Day21/Part2.hs
+    ghc-options:
+    - -main-is Day21.Part2.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day22p1:
+    main: app/Day22/Part1.hs
+    ghc-options:
+    - -main-is Day22.Part1.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day22p2:
+    main: app/Day22/Part2.hs
+    ghc-options:
+    - -main-is Day22.Part2.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day23p1:
+    main: app/Day23/Part1.hs
+    ghc-options:
+    - -main-is Day23.Part1.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day23p2:
+    main: app/Day23/Part2.hs
+    ghc-options:
+    - -main-is Day23.Part2.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day24p1:
+    main: app/Day24/Part1.hs
+    ghc-options:
+    - -main-is Day24.Part1.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
+  haskell-aoc-day24p2:
+    main: app/Day24/Part2.hs
+    ghc-options:
+    - -main-is Day24.Part2.main
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - timeit
+
 tests:
   haskell-aoc-test:
     main: Spec.hs
@@ -711,3 +871,139 @@ tests:
     - timeit
     - megaparsec
     - hspec-megaparsec
+
+  haskell-aoc-test-day17:
+    main: Day17Spec.hs
+    source-dirs:
+    - test
+    - app
+    other-modules:
+    - Day17.Part1
+    - Day17.Part2
+    ghc-options:
+    - -main-is Day17Spec.run
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - hspec
+    - timeit
+
+  haskell-aoc-test-day18:
+    main: Day18Spec.hs
+    source-dirs:
+    - test
+    - app
+    other-modules:
+    - Day18.Part1
+    - Day18.Part2
+    ghc-options:
+    - -main-is Day18Spec.run
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - hspec
+    - timeit
+
+  haskell-aoc-test-day19:
+    main: Day19Spec.hs
+    source-dirs:
+    - test
+    - app
+    other-modules:
+    - Day19.Part1
+    - Day19.Part2
+    ghc-options:
+    - -main-is Day19Spec.run
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - hspec
+    - timeit
+
+  haskell-aoc-test-day20:
+    main: Day20Spec.hs
+    source-dirs:
+    - test
+    - app
+    other-modules:
+    - Day20.Part1
+    - Day20.Part2
+    ghc-options:
+    - -main-is Day20Spec.run
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - hspec
+    - timeit
+
+  haskell-aoc-test-day21:
+    main: Day21Spec.hs
+    source-dirs:
+    - test
+    - app
+    other-modules:
+    - Day21.Part1
+    - Day21.Part2
+    ghc-options:
+    - -main-is Day21Spec.run
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - hspec
+    - timeit
+
+  haskell-aoc-test-day22:
+    main: Day22Spec.hs
+    source-dirs:
+    - test
+    - app
+    other-modules:
+    - Day22.Part1
+    - Day22.Part2
+    ghc-options:
+    - -main-is Day22Spec.run
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - hspec
+    - timeit
+
+  haskell-aoc-test-day23:
+    main: Day23Spec.hs
+    source-dirs:
+    - test
+    - app
+    other-modules:
+    - Day23.Part1
+    - Day23.Part2
+    ghc-options:
+    - -main-is Day23Spec.run
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - hspec
+    - timeit
+
+  haskell-aoc-test-day24:
+    main: Day24Spec.hs
+    source-dirs:
+    - test
+    - app
+    other-modules:
+    - Day24.Part1
+    - Day24.Part2
+    ghc-options:
+    - -main-is Day24Spec.run
+    - -O2 -threaded
+    - -Wall -Werror
+    dependencies:
+    - haskell-aoc
+    - hspec
+    - timeit

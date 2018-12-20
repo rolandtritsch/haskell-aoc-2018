@@ -32,6 +32,22 @@ import qualified Day15.Part1 as D15P1
 import qualified Day15.Part2 as D15P2
 import qualified Day16.Part1 as D16P1
 import qualified Day16.Part2 as D16P2
+import qualified Day17.Part1 as D17P1
+import qualified Day17.Part2 as D17P2
+import qualified Day18.Part1 as D18P1
+import qualified Day18.Part2 as D18P2
+import qualified Day19.Part1 as D19P1
+import qualified Day19.Part2 as D19P2
+import qualified Day20.Part1 as D20P1
+import qualified Day20.Part2 as D20P2
+import qualified Day21.Part1 as D21P1
+import qualified Day21.Part2 as D21P2
+import qualified Day22.Part1 as D22P1
+import qualified Day22.Part2 as D22P2
+import qualified Day23.Part1 as D23P1
+import qualified Day23.Part2 as D23P2
+import qualified Day24.Part1 as D24P1
+import qualified Day24.Part2 as D24P2
 
 main :: IO ()
 main = do
@@ -75,3 +91,19 @@ main = do
   D15P2.main
   D16P1.main
   D16P2.main
+  D17P1.main
+  D17P2.main
+  D18P1.main
+  D18P2.main
+  D19P1.main
+  D19P2.main
+  D20P1.main
+  D20P2.main
+  D21P1.main
+  D21P2.main
+  D22P1.main
+  D22P2.main
+  D23P1.main
+  D23P2.main
+  D24P1.main
+  D24P2.main
