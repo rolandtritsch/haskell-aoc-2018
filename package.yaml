@@ -888,6 +888,8 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day18:
     main: Day18Spec.hs
