@@ -47,6 +47,7 @@ jobs:
           command: |
             apt update &&
             apt upgrade -y &&
+            apt install jq -y &&
             apt install curl -y &&
             curl -sSL https://github.com/sol/hpack/raw/master/get-hpack.sh | bash &&
             hpack --force
