@@ -43,6 +43,9 @@ jobs:
           keys:
             - cci-eta-aoc-2018-v1-{{ checksum "package.yaml" }}
       - run:
+          name: Generate cabal (from package.yaml)
+          command: curl -sSL https://github.com/sol/hpack/raw/master/get-hpack.sh | bash && hpack --force
+      - run:
           name: Init build
           command: etlas update && etlas select latest
       - run:
