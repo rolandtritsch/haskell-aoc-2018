@@ -29,6 +29,7 @@ library:
   - array
   - vector
   - safe
+  - megaparsec
 
 executables:
   haskell-aoc-exe:
@@ -407,6 +408,8 @@ tests:
     - timeit
     - containers
     - Unique
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day00:
     main: Day00Spec.hs
@@ -706,3 +709,5 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - megaparsec
+    - hspec-megaparsec

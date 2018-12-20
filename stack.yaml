@@ -9,4 +9,6 @@ packages:
 # Dependency packages to be pulled from upstream that are not in the resolver.
 extra-deps:
 - Unique-0.4.7.5
-- megaparsec-7.0.4
+# Downgraded to 6.5.0 to make hspec-megaparsec work again
+#- megaparsec-7.0.4
+- megaparsec-6.5.0
