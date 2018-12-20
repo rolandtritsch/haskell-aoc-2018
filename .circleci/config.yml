@@ -45,6 +45,8 @@ jobs:
       - run:
           name: Generate cabal (from package.yaml)
           command: |
+            apt update &&
+            apt upgrade -y &&
             apt install curl -y &&
             curl -sSL https://github.com/sol/hpack/raw/master/get-hpack.sh | bash &&
             hpack --force
