@@ -10,7 +10,7 @@ import Data.List (sort, nub, (\\))
 import Day03
 
 -- | solve the puzzle
-solve :: [Claim] -> Int
+solve :: Claims -> Int
 solve cs = nonOverlappingCid where
   nonOverlappingCid = go claimsCids where
     go [] = error "No cid found"
@@ -25,5 +25,5 @@ solve cs = nonOverlappingCid where
 -- | main
 main :: IO ()
 main = do
-  (time, result) <- timeItT $ evaluate (solve input)
+  (time, result) <- timeItT $ evaluate (solve parsedInput)
   printf "Day03: No Matter How You Slice It: Part2: nonOverlappingCid -> (%d, %f)\n" result time
