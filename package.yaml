@@ -587,6 +587,8 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day01:
     main: Day01Spec.hs
@@ -605,6 +607,8 @@ tests:
     - hspec
     - timeit
     - containers
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day02:
     main: Day02Spec.hs
@@ -623,6 +627,8 @@ tests:
     - hspec
     - timeit
     - Unique
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day03:
     main: Day03Spec.hs
@@ -641,6 +647,8 @@ tests:
     - hspec
     - timeit
     - containers
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day04:
     main: Day04Spec.hs
@@ -658,6 +666,8 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day05:
     main: Day05Spec.hs
@@ -675,6 +685,8 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day06:
     main: Day06Spec.hs
@@ -693,6 +705,8 @@ tests:
     - hspec
     - timeit
     - containers
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day07:
     main: Day07Spec.hs
@@ -710,6 +724,8 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day08:
     main: Day08Spec.hs
@@ -728,6 +744,8 @@ tests:
     - hspec
     - timeit
     - containers
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day09:
     main: Day09Spec.hs
@@ -746,6 +764,8 @@ tests:
     - hspec
     - timeit
     - containers
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day10:
     main: Day10Spec.hs
@@ -763,6 +783,8 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day11:
     main: Day11Spec.hs
@@ -781,6 +803,8 @@ tests:
     - hspec
     - timeit
     - containers
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day12:
     main: Day12Spec.hs
@@ -799,6 +823,8 @@ tests:
     - hspec
     - timeit
     - containers
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day13:
     main: Day13Spec.hs
@@ -817,6 +843,8 @@ tests:
     - hspec
     - timeit
     - containers
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day14:
     main: Day14Spec.hs
@@ -834,6 +862,8 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day15:
     main: Day15Spec.hs
@@ -852,6 +882,8 @@ tests:
     - hspec
     - timeit
     - containers
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day16:
     main: Day16Spec.hs
@@ -869,6 +901,8 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - megaparsec
+    - hspec-megaparsec
     - megaparsec
     - hspec-megaparsec
 
@@ -964,6 +998,8 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day22:
     main: Day22Spec.hs
@@ -981,6 +1017,8 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day23:
     main: Day23Spec.hs
@@ -998,6 +1036,8 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - megaparsec
+    - hspec-megaparsec
 
   haskell-aoc-test-day24:
     main: Day24Spec.hs
@@ -1015,3 +1055,5 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - megaparsec
+    - hspec-megaparsec

@@ -1,5 +1,9 @@
 module Day00Spec where
 
+import Text.Megaparsec (parse)
+--import Text.Megaparsec.Debug (dbg)
+import Test.Hspec.Megaparsec (shouldParse, parseSatisfies)
+
 import Test.Hspec
 
 import Day00
@@ -12,6 +16,11 @@ run = hspec $ do
     it "should return the input" $ do
       head input `shouldBe` "Hello"
       last input `shouldBe` "World"
+
+  describe "parse" $ do
+    it "should parse the input" $ do
+      parse parseWord "" "Roland" `shouldParse` "Roland"
+      parse parseWords "" input1 `parseSatisfies` ((==) 2 . length)
 
   describe "solve - Part1" $ do
     it "should return the right result(s) for the testcases" $ do
