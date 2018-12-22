@@ -1,7 +1,7 @@
 module Day20Spec where
 
 import Text.Megaparsec (parse)
---import Text.Megaparsec.Debug (dbg)
+import Text.Megaparsec.Debug (dbg)
 import Test.Hspec.Megaparsec (shouldParse)
 --import Test.Hspec.Megaparsec (shouldParse, parseSatisfies)
 
@@ -24,7 +24,9 @@ run = hspec $ do
       parse parseBranch "" "(|WE)" `shouldParse` Branch (Path []) (Path [West,East])
       parse parseBranch "" "(NS|)" `shouldParse` Branch (Path [North,South]) (Path [])
       parse parseRoute "" "NSWE" `shouldParse` Path [North, South, West, East]
-      parse parseRoute "" "(NS|WE)" `shouldParse` Branch (Path [North,South]) (Path [West,East])
+      parse (dbg "route" parseRoute) "" "(NS|WE)" `shouldParse` Branch (Path [North,South]) (Path [West,East])
+      --parse (dbg "routes" parseRoutes) "" "^N$" `shouldParse` [Branch (Path []) (Path [])]
+      --parse (dbg "routes" parseRoutes) "" "^$" `shouldParse` [Path [North, South, West, East], Branch (Path [North,South]) (Path [West,East]), Path [North, South, West, East]]
       --parse (dbg "routes" parseRoutes) "" "^NSWE(NS|WE)NSWE$" `shouldParse` [Path [North, South, West, East], Branch (Path [North,South]) (Path [West,East]), Path [North, South, West, East]]
       --parse parseRoutes "" "^NSWE(N|S)(E|)(|W)NSWE(N(S|(E|W)))NSWE(((N|S)|W)|E)$" `parseSatisfies` ((==) 0 . length)
       --parse parseRoutes "" input1 `parseSatisfies` ((==) 0 . length)

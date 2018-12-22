@@ -11,7 +11,7 @@ Part 2 - ???
 -}
 module Day20 where
 
-import Text.Megaparsec (many, eof, (<|>))
+import Text.Megaparsec (many, (<|>))
 import Text.Megaparsec.Char (char)
 
 import Util (inputRaw, inputRaw1, Parser)
@@ -31,7 +31,7 @@ input1 = inputRaw1 "input/Day20input.txt"
 
 -- | parse the regex and turn it into a sequence/list of Paths and Branches.
 parseRoutes :: Parser Routes
-parseRoutes = parseBeginOfRegex *> many parseRoute <* parseEndOfRegex <* eof
+parseRoutes = parseBeginOfRegex *> many parsePath <* parseEndOfRegex
 
 parseRoute :: Parser Route
 parseRoute = parseBranch <|> parsePath
