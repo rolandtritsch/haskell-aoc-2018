@@ -34,6 +34,15 @@ inputParser' parser fileName = do
     Left e -> error $ P.errorBundlePretty e
     Right a -> return a
 
+inputParser1 :: Parser a -> String -> a
+inputParser1 parser contents = unsafePerformIO $ inputParser1' parser contents
+
+inputParser1' :: Parser a -> String -> IO a
+inputParser1' parser contents = do
+  case P.parse parser "contents.txt" contents of
+    Left e -> error $ P.errorBundlePretty e
+    Right a -> return a
+
 -- | parse integer(s).
 integer :: Parser Int
 integer = L.decimal

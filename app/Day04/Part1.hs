@@ -7,14 +7,14 @@ import Control.Exception (evaluate)
 import Day04
 
 -- | solve the puzzle
-solve :: [String] -> Int
-solve rs = maxCid * bestMinute where
-  shifts = (record2Shift . stream2Record . input2Stream) rs
+solve :: Events -> Int
+solve es = maxCid * bestMinute where
+  shifts = (record2Shift . stream2Record) es
   (maxCid, _) = mostAsleep shifts
   (bestMinute, _) = asleepMost shifts maxCid
 
 -- | main
 main :: IO ()
 main = do
-  (time, result) <- timeItT $ evaluate (solve input)
+  (time, result) <- timeItT $ evaluate (solve parsedInput)
   printf "Day04: Repose Record: Part1: mostAsleep -> (%d, %f)\n" result time
