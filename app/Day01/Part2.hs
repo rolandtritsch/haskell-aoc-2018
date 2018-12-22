@@ -9,7 +9,7 @@ import qualified Data.Set as S
 import Day01
 
 -- | solve the puzzle
-solve :: [Frequency] -> Integer
+solve :: Frequencies -> Int
 solve fs = go S.empty $ scanl (+) 0 (cycle fs) where
   go seenFrequencySums (fsum:rest)
     | S.member fsum seenFrequencySums = fsum
@@ -19,5 +19,5 @@ solve fs = go S.empty $ scanl (+) 0 (cycle fs) where
 -- | main
 main :: IO ()
 main = do
-  (time, result) <- timeItT $ evaluate (solve input)
+  (time, result) <- timeItT $ evaluate (solve parsedInput)
   printf "Day01: Chronal Calibration: Part2: seenFrequencySums -> (%d, %f)\n" result time

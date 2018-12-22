@@ -7,11 +7,11 @@ import Control.Exception (evaluate)
 import Day01
 
 -- | solve the puzzle
-solve :: [Frequency] -> Integer
+solve :: Frequencies -> Int
 solve fs = foldl (+) 0 fs
 
 -- | main
 main :: IO ()
 main = do
-  (time, result) <- timeItT $ evaluate (solve input)
+  (time, result) <- timeItT $ evaluate (solve parsedInput)
   printf "Day01: Chronal Calibration: Part1: sum -> (%d, %f)\n" result time

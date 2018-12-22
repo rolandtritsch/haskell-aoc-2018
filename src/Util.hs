@@ -13,16 +13,30 @@ type Parser = P.Parsec Void String
 
 -- | get the (raw) input (as a list of strings) from the given input file
 inputRaw :: String -> [String]
-inputRaw fileName = lines $ take (length contents - 1) contents
+inputRaw fileName = lines $ contents
   where
     contents = unsafePerformIO $ readFile fileName
 
 -- | get the (raw) input (as one line (with newlines in it))
 inputRaw1 :: String -> String
-inputRaw1 fileName = take (length contents - 1) contents
+inputRaw1 fileName = contents
   where
     contents = unsafePerformIO $ readFile fileName
 
--- | parse a signed integer.
+-- | get the (parsed) input.
+inputParser :: Parser a -> String -> a
+inputParser parser fileName = unsafePerformIO $ inputParser' parser fileName
+
+inputParser' :: Parser a -> String -> IO a
+inputParser' parser fileName = do
+  contents <- readFile fileName
+  case P.parse parser fileName contents of
+    Left e -> error $ P.errorBundlePretty e
+    Right a -> return a
+
+-- | parse integer(s).
+integer :: Parser Int
+integer = L.decimal
+
 signedInteger :: Parser Int
 signedInteger = L.signed (return ()) L.decimal
