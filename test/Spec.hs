@@ -46,8 +46,8 @@ main = do
   Day07Spec.run
   putStrLn "\n--Day08Spec ..."
   Day08Spec.run
-  putStrLn "\n--Day09Spec ..."
-  Day09Spec.run
+  putStrLn "\nSKIP --Day09Spec ..."
+  --Day09Spec.run
   putStrLn "\n--Day10Spec ..."
   Day10Spec.run
   putStrLn "\n--Day11Spec ..."
