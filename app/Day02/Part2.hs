@@ -8,7 +8,7 @@ import Day02
 
 -- | compare every boxid with every boxid and find
 -- out what the difference is and what is common.
-diff :: [BoxId] -> [(BoxId, BoxId, String, String)]
+diff :: BoxIds -> [(BoxId, BoxId, String, String)]
 diff boxIds = concatMap diffId boxIds where
   diffId bid = map diffId' boxIds where
     diffId' bid' = (bid, bid', difference', common') where
@@ -18,7 +18,7 @@ diff boxIds = concatMap diffId boxIds where
         same c0 c1 = if c0 == c1 then [c0] else ""
 
 -- | solve the puzzle
-solve :: [BoxId] -> String
+solve :: BoxIds -> String
 solve boxIds = common where
   (_, _, _, common) = head $ filter diffByOne $ diff boxIds where
     diffByOne (bid', _, _, common') = (length bid') == ((length common') + 1)
@@ -26,5 +26,5 @@ solve boxIds = common where
 -- | main
 main :: IO ()
 main = do
-  (time, result) <- timeItT $ evaluate (solve input)
+  (time, result) <- timeItT $ evaluate (solve parsedInput)
   printf "Day02: Inventory Management System: Part2: diffByOne -> (%s, %f)\n" result time

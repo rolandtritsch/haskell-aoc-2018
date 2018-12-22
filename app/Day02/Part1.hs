@@ -9,7 +9,7 @@ import Data.List.Unique (count)
 import Day02
 
 -- | solve the puzzle
-solve :: [BoxId] -> Int
+solve :: BoxIds -> Int
 solve boxIds = numberOfBoxesWithTwoLetters * numberOfBoxesWithThreeLetters where
   numberOfBoxesWithTwoLetters = (length . filter (numberOfLetters 2)) boxIds
   numberOfBoxesWithThreeLetters = (length . filter (numberOfLetters 3)) boxIds
@@ -18,5 +18,5 @@ solve boxIds = numberOfBoxesWithTwoLetters * numberOfBoxesWithThreeLetters where
 -- | main
 main :: IO ()
 main = do
-  (time, result) <- timeItT $ evaluate (solve input)
+  (time, result) <- timeItT $ evaluate (solve parsedInput)
   printf "Day02: Inventory Management System: Part1: numberOfLetters -> (%d, %f)\n" result time
