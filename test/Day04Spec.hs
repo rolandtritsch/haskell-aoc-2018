@@ -2,7 +2,6 @@ module Day04Spec where
 
 import Text.Megaparsec (parse)
 --import Text.Megaparsec.Debug (dbg)
---import Test.Hspec.Megaparsec (shouldParse)
 import Test.Hspec.Megaparsec (shouldParse, parseSatisfies)
 
 import Test.Hspec

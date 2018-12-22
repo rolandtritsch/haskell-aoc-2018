@@ -20,9 +20,12 @@ and return the minimum length.
 -}
 module Day05 where
 
-import Data.Char
+import Text.Megaparsec (many, eof, (<|>))
+import Text.Megaparsec.Char (upperChar, lowerChar, newline)
 
-import Util (inputRaw)
+import Util (inputRaw, inputRaw1, inputParser, Parser)
+
+import Data.Char
 
 type Type = Char
 data Polarity = Plus | Minus deriving (Show, Eq)
@@ -31,8 +34,8 @@ data Unit = Unit Type Polarity deriving (Show, Eq)
 type Polymer = [Unit]
 
 -- | read the input file
-input :: String
-input = head $ inputRaw "input/Day05input.txt" where
+input :: Polymer
+input = buildPolymer $ head $ inputRaw "input/Day05input.txt" where
 
 -- | build a/the polymer.
 buildPolymer :: String -> Polymer
@@ -40,6 +43,23 @@ buildPolymer line = map buildPolymer' line where
   buildPolymer' c = Unit (toLower c) (p (isLower c)) where
     p True = Minus
     p False = Plus
+
+-- | read the input file
+input1 :: String
+input1 = inputRaw1 "input/Day05input.txt"
+
+-- | the parsed input.
+parsedInput :: Polymer
+parsedInput = inputParser parsePolymer "input/Day05input.txt"
+
+parsePolymer:: Parser Polymer
+parsePolymer = many (parsePositiveUnit <|> parseNegativeUnit) <* newline <* eof
+
+parsePositiveUnit, parseNegativeUnit :: Parser Unit
+parsePositiveUnit = toUnit <$> upperChar where
+  toUnit c = Unit (toLower c) Plus
+parseNegativeUnit = toUnit <$> lowerChar where
+  toUnit c = Unit c Minus
 
 -- | can these two Units react?
 canReact :: Unit -> Unit -> Bool

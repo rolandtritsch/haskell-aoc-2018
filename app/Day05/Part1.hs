@@ -7,11 +7,11 @@ import Control.Exception (evaluate)
 import Day05
 
 -- | solve the puzzle
-solve :: String -> Int
-solve p = (length . reaction) (buildPolymer p)
+solve :: Polymer -> Int
+solve p = (length . reaction) p
 
 -- | main
 main :: IO ()
 main = do
-  (time, result) <- timeItT $ evaluate (solve input)
+  (time, result) <- timeItT $ evaluate (solve parsedInput)
   printf "Day05: Alchemical Reduction: Part1: length -> (%d, %f)\n" result time
