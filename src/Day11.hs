@@ -14,7 +14,7 @@ module Day11 where
 import Data.List (maximumBy)
 import qualified Data.Map as M
 
---import Util (inputRaw)
+import Util (inputRaw)
 
 type SerialNumber = Int
 type PowerLevel = Int
@@ -23,8 +23,7 @@ type Grid = M.Map Coordinate PowerLevel
 
 -- | read the input.
 input :: SerialNumber
---input = inputRaw "input/Day11input.txt"
-input = 3999
+input = read $ head $ inputRaw "input/Day11input.txt"
 
 -- | the dimension of the grid.
 dimension :: ((Int, Int),(Int, Int))

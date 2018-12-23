@@ -24,11 +24,14 @@ the polynom.
 -}
 module Day12 where
 
+import Text.Megaparsec (many, eof, optional, (<|>))
+import Text.Megaparsec.Char (newline, string, char)
+
+import Util (inputRaw, inputRaw1, inputParser, Parser)
+
 import Data.List (nub)
 import Data.List.Split (splitOneOf)
 import qualified Data.Map as M
-
-import Util (inputRaw)
 
 type Pod = Int
 type Note = [Bool]
@@ -48,6 +51,42 @@ input = (initialState, rules) where
       note = map ((==) '#') $ tokens !! 0
       alive "#" = True
       alive _ = False
+
+-- | read the input file
+input1 :: String
+input1 = inputRaw1 "input/Day12input.txt"
+
+-- | the parsed input.
+parsedInput :: (State, Notes)
+parsedInput = inputParser parseInit "input/Day12input.txt"
+
+parseInit :: Parser (State, Notes)
+parseInit = (,)
+  <$> parseState
+  <* newline
+  <* newline
+  <*> parseNotes
+  <* eof
+
+parseState :: Parser State
+parseState = toState
+  <$ string "initial state: "
+  <*> many (parseAlive <|> parseDead)
+  where
+    toState states = M.fromList $ zip [0..] states
+
+parseAlive, parseDead :: Parser Bool
+parseAlive = True <$ char '#'
+parseDead = False <$ char '.'
+
+parseNotes :: Parser Notes
+parseNotes = M.fromList <$> many (parseNote <* optional newline)
+
+parseNote :: Parser (Note, Bool)
+parseNote =  (,)
+  <$> many (parseAlive <|> parseDead)
+  <* string " => "
+  <*> (parseAlive <|> parseDead)
 
 -- | evolve (one generation).
 evolve :: Notes -> State -> State

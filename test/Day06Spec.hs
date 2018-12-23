@@ -22,6 +22,7 @@ run = hspec $ do
         (5,5),
         (9,8)
         ]
+
   describe "input" $ do
     it "should return the input" $ do
       head input `shouldBe` (353,177)
