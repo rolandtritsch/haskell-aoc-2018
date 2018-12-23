@@ -52,7 +52,7 @@ input1 = inputRaw1 "input/Day05input.txt"
 parsedInput :: Polymer
 parsedInput = inputParser parsePolymer "input/Day05input.txt"
 
-parsePolymer:: Parser Polymer
+parsePolymer :: Parser Polymer
 parsePolymer = many (parsePositiveUnit <|> parseNegativeUnit) <* newline <* eof
 
 parsePositiveUnit, parseNegativeUnit :: Parser Unit

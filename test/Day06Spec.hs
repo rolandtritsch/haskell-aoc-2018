@@ -1,5 +1,9 @@
 module Day06Spec where
 
+import Text.Megaparsec (parse)
+--import Text.Megaparsec.Debug (dbg)
+import Test.Hspec.Megaparsec (shouldParse, parseSatisfies)
+
 import qualified Data.Map as M
 
 import Test.Hspec
@@ -21,6 +25,12 @@ run = hspec $ do
   describe "input" $ do
     it "should return the input" $ do
       head input `shouldBe` (353,177)
+      head parsedInput `shouldBe` (353,177)
+
+  describe "parse" $ do
+    it "should parse the input" $ do
+      parse parseOrigin "" "123, 456" `shouldParse` (123, 456)
+      parse parseOrigins "" input1 `parseSatisfies` ((==) 50 . length)
 
   describe "buildGrid" $ do
     it "should return the grid" $ do
@@ -46,8 +56,8 @@ run = hspec $ do
       D06P1.solve testInput `shouldBe` 17
 
     it "should solve the puzzle" $ do
-      D06P1.solve input `shouldBe` 4829
+      D06P1.solve parsedInput `shouldBe` 4829
 
   describe "solve - Part2" $ do
     it "should solve the puzzle" $ do
-      D06P2.solve input `shouldBe` 46966
+      D06P2.solve parsedInput `shouldBe` 46966

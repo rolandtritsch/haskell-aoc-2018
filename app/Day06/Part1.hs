@@ -14,5 +14,5 @@ solve origins = snd $ largest $ buildGrid b origins where
 -- | main
 main :: IO ()
 main = do
-  (time, result) <- timeItT $ evaluate (solve input)
+  (time, result) <- timeItT $ evaluate (solve parsedInput)
   printf "Day06: Chronal Coordinates: Part1: largest -> (%d, %f)\n" result time

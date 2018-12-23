@@ -33,12 +33,15 @@ Part 2 - ???
 -}
 module Day06 where
 
+import Text.Megaparsec (many, eof, optional)
+import Text.Megaparsec.Char (newline, string)
+
+import Util (inputRaw, inputRaw1, inputParser, Parser, integer)
+
 import Data.Ord (comparing)
 import Data.List (minimumBy, nub, groupBy, maximumBy, sortBy)
 import Data.List.Split (splitOneOf)
 import qualified Data.Map as M
-
-import Util (inputRaw)
 
 type Coordinate = (Int, Int)
 type Origin = (Int, Int)
@@ -66,6 +69,20 @@ input = map line $ inputRaw "input/Day06input.txt" where
     tokens = splitOneOf "," l
     x = read $ tokens !! 0
     y = read $ tokens !! 1
+
+-- | read the input file
+input1 :: String
+input1 = inputRaw1 "input/Day06input.txt"
+
+-- | the parsed input.
+parsedInput :: [Origin]
+parsedInput = inputParser parseOrigins "input/Day06input.txt"
+
+parseOrigins :: Parser [Origin]
+parseOrigins = many (parseOrigin <* optional newline) <* eof
+
+parseOrigin :: Parser Origin
+parseOrigin = (,) <$> integer <* string ", " <*> integer
 
 -- | find the origin that is closest to the given point.
 closestOrigin :: Coordinate -> [Origin] -> Maybe Origin

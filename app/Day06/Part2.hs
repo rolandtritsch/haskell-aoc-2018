@@ -16,5 +16,5 @@ solve os = size where
 -- | main
 main :: IO ()
 main = do
-  (time, result) <- timeItT $ evaluate (solve input)
+  (time, result) <- timeItT $ evaluate (solve parsedInput)
   printf "Day06: Chronal Coordinates: Part2: region -> (%d, %f)\n" result time
