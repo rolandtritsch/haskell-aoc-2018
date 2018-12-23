@@ -1,5 +1,9 @@
 module Day10Spec where
 
+import Text.Megaparsec (parse)
+--import Text.Megaparsec.Debug (dbg)
+import Test.Hspec.Megaparsec (shouldParse, parseSatisfies)
+
 import Test.Hspec
 
 import Day10
@@ -39,19 +43,27 @@ run = hspec $ do
   describe "input" $ do
     it "should return the input" $ do
       head input `shouldBe` ((-10166,-20343),(1,2))
+      head parsedInput `shouldBe` ((-10166,-20343),(1,2))
+
+  describe "parse" $ do
+    it "should parse the input" $ do
+      parse parsePosition "" "position=<-10166, -20343>" `shouldParse` (-10166, -20343)
+      parse parseVelocity "" "velocity=< 1,  2>" `shouldParse` (1, 2)
+      parse parseLight "" "position=<-10166, -20343> velocity=< 1,  2>" `shouldParse` ((-10166, -20343), (1, 2))
+      parse parseTheSky "" input1 `parseSatisfies` ((==) 350 . length)
 
   describe "paint" $ do
     it "should return the night sky" $ do
       paint ((iterate tick testInput) !! 3) `shouldBe` testMessage
-      paint ((iterate tick input) !! 10274) `shouldBe` message
+      paint ((iterate tick parsedInput) !! 10274) `shouldBe` message
 
   describe "solve - Part1" $ do
     it "should return the right result(s) for the testcases" $ do
       D10P1.solve testInput `shouldBe` testMessage
 
     it "should solve the puzzle" $ do
-      D10P1.solve input `shouldBe` message
+      D10P1.solve parsedInput `shouldBe` message
 
   describe "solve - Part2" $ do
     it "should solve the puzzle" $ do
-      D10P2.solve input `shouldBe` 10274
+      D10P2.solve parsedInput `shouldBe` 10274

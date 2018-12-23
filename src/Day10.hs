@@ -16,11 +16,14 @@ find the message.
 -}
 module Day10 where
 
+import Text.Megaparsec (many, eof, optional)
+import Text.Megaparsec.Char (newline, string, char, space1)
+
+import Util (inputRaw, inputRaw1, inputParser, Parser, signedInteger)
+
 import Data.Maybe (isJust)
 import Data.List (minimumBy, maximumBy, find)
 import Data.List.Split (splitOneOf)
-
-import Util (inputRaw)
 
 type Position = (Int, Int)
 type Velocity = (Int, Int)
@@ -37,6 +40,40 @@ input = map process $ inputRaw "input/Day10input.txt" where
     r = read $ tokens !! 2
     a = read $ tokens !! 4
     b = read $ tokens !! 5
+
+-- | read the input file
+input1 :: String
+input1 = inputRaw1 "input/Day10input.txt"
+
+-- | the parsed input.
+parsedInput :: Sky
+parsedInput = inputParser parseTheSky "input/Day10input.txt"
+
+parseTheSky :: Parser Sky
+parseTheSky = many (parseLight <* optional newline) <* eof
+
+parseLight :: Parser Light
+parseLight = (,) <$> parsePosition <* space1 <*> parseVelocity
+
+parsePosition :: Parser Position
+parsePosition = (,)
+  <$ string "position=<"
+  <* optional (char ' ')
+  <*> signedInteger
+  <* string ", "
+  <* optional (char ' ')
+  <*> signedInteger
+  <* char '>'
+
+parseVelocity :: Parser Velocity
+parseVelocity = (,)
+  <$ string "velocity=<"
+  <* optional (char ' ')
+  <*> signedInteger
+  <* string ", "
+  <* optional (char ' ')
+  <*> signedInteger
+  <* char '>'
 
 -- | move the sky by one second.
 tick :: Sky -> Sky
