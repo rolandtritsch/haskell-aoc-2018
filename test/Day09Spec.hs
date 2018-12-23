@@ -1,5 +1,9 @@
 module Day09Spec where
 
+import Text.Megaparsec (parse)
+--import Text.Megaparsec.Debug (dbg)
+import Test.Hspec.Megaparsec (shouldParse)
+
 import qualified Data.Map as M
 import qualified Data.Sequence as S
 
@@ -16,6 +20,11 @@ run = hspec $ do
   describe "input" $ do
     it "should return the input" $ do
       input `shouldBe` (431, 70950)
+      parsedInput `shouldBe` (431, 70950)
+
+  describe "parse" $ do
+    it "should parse the input" $ do
+      parse parseGame "" "431 players; last marble is worth 70950 points\n" `shouldParse` (431, 70950)
 
   describe "move" $ do
     it "should produce the correct game state (for the testcase(s))" $ do
@@ -41,8 +50,8 @@ run = hspec $ do
       D09P1.solve (30,5807) `shouldBe` 37305
 
     it "should solve the puzzle" $ do
-      D09P1.solve input `shouldBe` 404611
+      D09P1.solve parsedInput `shouldBe` 404611
 
   describe "solve - Part2" $ do
     it "should solve the puzzle" $ do
-      D09P2.solve input `shouldBe` 3350093681
+      D09P2.solve parsedInput `shouldBe` 3350093681

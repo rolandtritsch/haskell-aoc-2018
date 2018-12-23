@@ -14,10 +14,13 @@ Part 2 - No change. Just runs longer (30 secs).
 -}
 module Day09 where
 
+import Text.Megaparsec (eof)
+import Text.Megaparsec.Char (string, newline)
+
+import Util (inputRaw, inputRaw1, inputParser, Parser, integer)
+
 import qualified Data.Map as M
 import qualified Data.Sequence as S
-
-import Util (inputRaw)
 
 type Game = (Int, Int)
 type Scores = M.Map Int Int
@@ -29,9 +32,27 @@ data GameState = GameState Game Scores Player Board deriving (Show, Eq)
 -- | read the input file
 input :: Game
 input = (numberOfPlayers, numberOfMarples) where
+  -- 431 players; last marble is worth 70950 points
   tokens = words $ head $ inputRaw "input/Day09input.txt"
   numberOfPlayers = read $ tokens !! 0
   numberOfMarples = read $ tokens !! 6
+
+-- | read the input file
+input1 :: String
+input1 = inputRaw1 "input/Day09input.txt"
+
+-- | the parsed input.
+parsedInput :: Game
+parsedInput = inputParser parseGame "input/Day09input.txt"
+
+parseGame :: Parser Game
+parseGame = (,)
+  <$> integer
+  <* string " players; last marble is worth "
+  <*> integer
+  <* string " points"
+  <* newline
+  <* eof
 
 -- | init the game.
 initGame :: Game -> GameState

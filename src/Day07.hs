@@ -16,10 +16,13 @@ Part 2 - ???
 -}
 module Day07 where
 
+import Text.Megaparsec (many, eof, optional)
+import Text.Megaparsec.Char (newline, string, upperChar)
+
+import Util (inputRaw, inputRaw1, inputParser, Parser)
+
 import Data.List ((\\), sort)
 import qualified Data.Map as M
-
-import Util (inputRaw)
 
 type Step = Char
 type Dependency = (Step, Step)
@@ -32,7 +35,27 @@ type Work = M.Map Step Duration
 -- | read the input file.
 input :: [Dependency]
 input = map process $ inputRaw "input/Day07input.txt" where
+  -- Step J must be finished before step E can begin.
   process line = (head $ words line !! 1, head $ words line !! 7)
+
+-- | read the input file
+input1 :: String
+input1 = inputRaw1 "input/Day07input.txt"
+
+-- | the parsed input.
+parsedInput :: [Dependency]
+parsedInput = inputParser parseDependencies "input/Day07input.txt"
+
+parseDependencies :: Parser [Dependency]
+parseDependencies = many (parseDependency <* optional newline) <* eof
+
+parseDependency :: Parser Dependency
+parseDependency = (,)
+  <$ string "Step "
+  <*> upperChar
+  <* string " must be finished before step "
+  <*> upperChar
+  <* string " can begin."
 
 -- | build a/the graph.
 buildGraph :: [Dependency] -> Graph

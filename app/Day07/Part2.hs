@@ -15,5 +15,5 @@ solve delay ws ds = elapse where
 -- | main
 main :: IO ()
 main = do
-  (time, result) <- timeItT $ evaluate (solve 60 5 input)
+  (time, result) <- timeItT $ evaluate (solve 60 5 parsedInput)
   printf "Day07: The Sum of Its Parts: Part2: workers -> (%d, %f)\n" result time
