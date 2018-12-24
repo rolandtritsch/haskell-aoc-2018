@@ -11,11 +11,11 @@ Part 2 - ???
 -}
 module Day16 where
 
-import Text.Megaparsec (sepBy, between, many, eof)
+import Text.Megaparsec (sepBy, between, many, eof, optional)
 import Text.Megaparsec.Char (string, space1, newline)
 import Text.Megaparsec.Char.Lexer (decimal)
 
-import Util (inputRaw, Parser, signedInteger)
+import Util (inputRaw1, inputParser, Parser, signedInteger)
 
 data Instruction = Instruction {
   iOpCode :: Int,
@@ -27,11 +27,20 @@ data Instruction = Instruction {
 type Registers = [Int]
 data Observation = Observation Registers Instruction Registers deriving (Show, Eq)
 type Observations = [Observation]
+type Instructions = [Instruction]
 
--- | read the input file(s)
-input1, input2 :: [String]
-input1 = inputRaw "input/Day16input1.txt"
-input2 = inputRaw "input/Day16input2.txt"
+-- | the input as a string (for testing the parser).
+input11, input12 :: String
+input11 = inputRaw1 "input/Day16input1.txt"
+input12 = inputRaw1 "input/Day16input2.txt"
+
+-- | the parsed input for Part 1.
+parsedInput1 :: Observations
+parsedInput1 = inputParser parseObservations "input/Day16input1.txt"
+
+-- | the parsed input for Part 2.
+parsedInput2 :: Instructions
+parsedInput2 = inputParser parseInstructions "input/Day16input2.txt"
 
 -- | parse some a set of registers "[9, 10, -1]"
 parseRegisters :: Parser Registers
@@ -58,4 +67,8 @@ parseObservation = Observation
 
 -- | parse the observations.
 parseObservations :: Parser Observations
-parseObservations = many (parseObservation <* newline <* newline) <* eof
+parseObservations = many (parseObservation <* newline <* optional newline) <* eof
+
+-- | parse the instrcutions.
+parseInstructions :: Parser Instructions
+parseInstructions = many (parseInstruction <* optional newline) <* eof
