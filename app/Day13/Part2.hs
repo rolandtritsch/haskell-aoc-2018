@@ -9,9 +9,8 @@ import qualified Data.Map as M
 import Day13
 
 -- | solve the puzzle
-solve :: Tracks -> Position
-solve tracks = go carts [] where
-  (grid, carts) = buildGrid tracks
+solve :: (Grid, Carts) -> Position
+solve (grid, carts) = go carts [] where
   go carts' collisions'
     | M.size carts' > 1 = go carts'' (collisions' ++ collisions'')
     | otherwise = head $ M.keys carts'
@@ -21,5 +20,5 @@ solve tracks = go carts [] where
 -- | main
 main :: IO ()
 main = do
-  (time, result) <- timeItT $ evaluate (solve input)
+  (time, result) <- timeItT $ evaluate (solve parsedInput)
   printf "Day13: Mine Cart Madness: Part2: final -> (%s, %f)\n" (show result) time

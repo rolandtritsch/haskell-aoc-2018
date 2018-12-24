@@ -13,13 +13,20 @@ Part 2 - We *just* execute ticks until only one cart is left over.
 -}
 module Day13 where
 
+--import Text.Megaparsec (many, eof, optional, (<|>), getParserState, State, PosState, SourcePos)
+import Text.Megaparsec
+--import Text.Megaparsec.Char (newline, string, char)
+import Text.Megaparsec.Char
+
+--import Util (inputRaw, inputRaw1, inputParser, Parser)
+import Util
+
+import Data.Maybe (catMaybes)
 import Prelude hiding (cos)
 import qualified Data.Map as M
 
-import Util (inputRaw)
-
 data Position = Position Int Int deriving (Show, Eq, Ord)
-data Segment = Horizontal | Vertical | TurnSlash | TurnBackslash | Intersection deriving (Show, Eq)
+data Segment = Horizontal | Vertical | TurnSlash | TurnBackSlash | Intersection deriving (Show, Eq)
 data Direction = Up' | Down' | Left' | Right' deriving (Show, Eq)
 
 type Tracks = [String]
@@ -27,9 +34,13 @@ type Intersections = Int
 type Grid = M.Map Position Segment
 type Carts = M.Map Position (Direction, Intersections)
 
+-- types for parsing
+type Grid' = (Position, Segment)
+type Carts' = (Position, (Direction, Intersections))
+
 -- | read the input file
-input :: Tracks
-input = inputRaw "input/Day13input.txt"
+input :: (Grid, Carts)
+input = buildGrid $ inputRaw "input/Day13input.txt"
 
 -- | build the grid (from the tracks). Process every line and create segments from it.
 buildGrid :: Tracks -> (Grid, Carts)
@@ -40,13 +51,54 @@ buildGrid tracks = foldl process (M.empty, M.empty) (zip [0..] tracks) where
       | elem s ['-'] = (M.insert (Position row col) Horizontal g, c)
       | elem s ['|'] = (M.insert (Position row col) Vertical g, c)
       | elem s ['/'] = (M.insert (Position row col) TurnSlash g, c)
-      | elem s ['\\'] = (M.insert (Position row col) TurnBackslash g, c)
+      | elem s ['\\'] = (M.insert (Position row col) TurnBackSlash g, c)
       | elem s ['+'] = (M.insert (Position row col) Intersection g, c)
       | elem s ['^'] = (M.insert (Position row col) Vertical g, M.insert (Position row col) (Up', 0) c)
       | elem s ['v'] = (M.insert (Position row col) Vertical g, M.insert (Position row col) (Down', 0) c)
       | elem s ['<'] = (M.insert (Position row col) Horizontal g, M.insert (Position row col) (Left', 0) c)
       | elem s ['>'] = (M.insert (Position row col) Horizontal g, M.insert (Position row col) (Right', 0) c)
     segments _ _ = error "segments: Unexpected pattern match."
+
+-- | read the input file
+input1 :: String
+input1 = inputRaw1 "input/Day13input.txt"
+
+-- | the parsed input.
+parsedInput :: (Grid, Carts)
+parsedInput = inputParser parseInit "input/Day13input.txt"
+
+parseInit :: Parser (Grid, Carts)
+parseInit = toGrid <$> manyTill (parseLine <* optional newline) eof where
+  toGrid lines' = (M.fromList grid, M.fromList carts) where
+    lines'' = concat lines'
+    grid = map fst lines''
+    carts = catMaybes $ map snd lines''
+
+parseLine :: Parser [(Grid', Maybe Carts')]
+parseLine = space *> many (parseHorizontal <|> parseVertical <|> parseSlash <|> parseBackSlash <|> parseIntersection <|> parseCartUp <|> parseCartDown <|> parseCartLeft <|> parseCartRight) <* space
+
+parseHorizontal, parseVertical, parseSlash, parseBackSlash, parseIntersection, parseCartUp, parseCartDown, parseCartLeft, parseCartRight :: Parser (Grid', Maybe Carts')
+parseHorizontal = toHorizontal <$> getSourcePos <* char '-' where
+  toHorizontal sp = ((toPosition sp, Horizontal), Nothing)
+parseVertical = toVertical <$> getSourcePos <* char '|' where
+  toVertical sp = ((toPosition sp, Vertical), Nothing)
+parseSlash = toTurnSlash <$> getSourcePos <* char '/' where
+  toTurnSlash sp = ((toPosition sp, TurnSlash), Nothing)
+parseBackSlash = toTurnBackSlash <$> getSourcePos <* char '\\' where
+  toTurnBackSlash sp = ((toPosition sp, TurnBackSlash), Nothing)
+parseIntersection = toIntersection <$> getSourcePos <* char '+' where
+  toIntersection sp = ((toPosition sp, Intersection), Nothing)
+parseCartUp = toCartUp <$> getSourcePos <* char '^' where
+  toCartUp sp = ((toPosition sp, Vertical), Just $ (toPosition sp, (Up', 0)))
+parseCartDown = toCartDown <$> getSourcePos <* char 'v' where
+  toCartDown sp = ((toPosition sp, Vertical), Just $ (toPosition sp, (Down', 0)))
+parseCartLeft = toCartLeft <$> getSourcePos <* char '<' where
+  toCartLeft sp = ((toPosition sp, Horizontal), Just $ (toPosition sp, (Left', 0)))
+parseCartRight = toCartRight <$> getSourcePos <* char '>' where
+  toCartRight sp = ((toPosition sp, Horizontal), Just $ (toPosition sp, (Right', 0)))
+
+toPosition :: SourcePos -> Position
+toPosition (SourcePos _ row col) = Position ((unPos row) - 1) ((unPos col) - 1)
 
 -- | move the carts by one tick. Note: Given that we are moving them one after the other
 -- we cannot look for collisions in the resulting cart positions, but need to check for
@@ -62,7 +114,7 @@ buildGrid tracks = foldl process (M.empty, M.empty) (zip [0..] tracks) where
 --   1. do not add the current cart and remove the other cart from previous carts
 -- 3. before tick ->>-; during tick --X-; after tick -->>; collision on 2
 --   1. do not add the current cart and remove the other cart from previous carts
--- 3. before tick -<<-; during tick <-<-; after tick <<--; NO collision
+-- 4. before tick -<<-; during tick <-<-; after tick <<--; NO collision
 --
 -- Also note that ...
 --
@@ -100,7 +152,7 @@ tick grid carts = (carts', collisions') where
       | checkForCollison' p cos = (cs, cos)
       | checkForCollison p' cs = (M.delete p' cs, p' : cos)
       | grid M.! p' == TurnSlash = (turn Right' p' i cs, cos)
-      | grid M.! p' == TurnBackslash = (turn Left' p' i cs, cos)
+      | grid M.! p' == TurnBackSlash = (turn Left' p' i cs, cos)
       | grid M.! p' == Intersection = (turn (d4i Up' i) p' (i + 1) cs, cos)
       | otherwise = (turn Up' p' i cs, cos)
       where
@@ -109,7 +161,7 @@ tick grid carts = (carts', collisions') where
       | checkForCollison' p cos = (cs, cos)
       | checkForCollison p' carts = (cs, p' : cos)
       | grid M.! p' == TurnSlash = (turn Left' p' i cs, cos)
-      | grid M.! p' == TurnBackslash = (turn Right' p' i cs, cos)
+      | grid M.! p' == TurnBackSlash = (turn Right' p' i cs, cos)
       | grid M.! p' == Intersection = (turn (d4i Down' i) p' (i + 1) cs, cos)
       | otherwise = (turn Down' p' i cs, cos)
       where
@@ -118,7 +170,7 @@ tick grid carts = (carts', collisions') where
       | checkForCollison' p cos = (cs, cos)
       | checkForCollison p' cs = (M.delete p' cs, p' : cos)
       | grid M.! p' == TurnSlash = (turn Down' p' i cs, cos)
-      | grid M.! p' == TurnBackslash = (turn Up' p' i cs, cos)
+      | grid M.! p' == TurnBackSlash = (turn Up' p' i cs, cos)
       | grid M.! p' == Intersection = (turn (d4i Left' i) p' (i + 1) cs, cos)
       | otherwise = (turn Left' p' i cs, cos)
       where
@@ -127,7 +179,7 @@ tick grid carts = (carts', collisions') where
       | checkForCollison' p cos = (cs, cos)
       | checkForCollison p' carts = (cs, p' : cos)
       | grid M.! p' == TurnSlash = (turn Up' p' i cs, cos)
-      | grid M.! p' == TurnBackslash = (turn Down' p' i cs, cos)
+      | grid M.! p' == TurnBackSlash = (turn Down' p' i cs, cos)
       | grid M.! p' == Intersection = (turn (d4i Right' i) p' (i + 1) cs, cos)
       | otherwise = (turn Right' p' i cs, cos)
       where

@@ -1,8 +1,12 @@
 module Day13Spec where
 
+import Text.Megaparsec (parse)
+--import Text.Megaparsec.Debug (dbg)
+import Test.Hspec.Megaparsec (shouldParse, parseSatisfies)
+
 import qualified Data.Map as M
 
-import Util (inputRaw)
+import Util (inputParser)
 
 import Test.Hspec
 
@@ -12,29 +16,31 @@ import qualified Day13.Part2 as D13P2
 
 run :: IO ()
 run = hspec $ do
-  let testInput = inputRaw "input/Day13test.txt"
-  let (testGrid, testCarts) = buildGrid testInput
-
-  let testInput2 = inputRaw "input/Day13test2.txt"
-
-  let input2 = inputRaw "input/Day13input2.txt"
-  let input3 = inputRaw "input/Day13input3.txt"
-  let input4 = inputRaw "input/Day13input4.txt"
-
-  describe "input" $ do
-    it "should return the input" $ do
-      head input `shouldBe` "                                          /------------\\ /-------------------------------------------------------------------------------\\            "
-      last input `shouldBe` "                                 \\--------------------------------------->------------------------------------------------------------/               "
+  let testInput@(testGrid, testCarts) = inputParser parseInit "input/Day13test.txt"
+  let testInput2 = inputParser parseInit "input/Day13test2.txt"
+  let input2 = inputParser parseInit "input/Day13input2.txt"
+  let input3 = inputParser parseInit "input/Day13input3.txt"
+  let input4 = inputParser parseInit "input/Day13input4.txt"
 
   describe "buildGrid" $ do
     it "should return the grid and the carts (for the testcase(s))" $ do
-      M.take 5 testGrid `shouldBe` M.fromList [(Position 0 0,TurnSlash),(Position 0 1,Horizontal),(Position 0 2,Horizontal),(Position 0 3,Horizontal),(Position 0 4,TurnBackslash)]
+      M.take 5 testGrid `shouldBe` M.fromList [(Position 0 0,TurnSlash),(Position 0 1,Horizontal),(Position 0 2,Horizontal),(Position 0 3,Horizontal),(Position 0 4,TurnBackSlash)]
       M.take 5 testCarts `shouldBe` M.fromList [(Position 0 2,(Right',0)),(Position 3 9,(Down',0))]
 
     it "should return the grid and the carts" $ do
-      let (grid, carts) = buildGrid input
+      let (grid, carts) = input
       M.take 5 grid `shouldBe` M.fromList [(Position 0 42,TurnSlash),(Position 0 43,Horizontal),(Position 0 44,Horizontal),(Position 0 45,Horizontal),(Position 0 46,Horizontal)]
       M.take 5 carts `shouldBe` M.fromList [(Position 4 49,(Right',0)),(Position 13 142,(Down',0)),(Position 19 22,(Up',0)),(Position 46 61,(Down',0)),(Position 59 0,(Down',0))]
+
+      let (grid', carts') = inputParser parseInit "input/Day13input.txt"
+      M.take 5 grid' `shouldBe` M.fromList [(Position 0 42,TurnSlash),(Position 0 43,Horizontal),(Position 0 44,Horizontal),(Position 0 45,Horizontal),(Position 0 46,Horizontal)]
+      M.take 5 carts' `shouldBe` M.fromList [(Position 4 49,(Right',0)),(Position 13 142,(Down',0)),(Position 19 22,(Up',0)),(Position 46 61,(Down',0)),(Position 59 0,(Down',0))]
+
+  describe "parse" $ do
+    it "should parse the input" $ do
+      parse parseLine "" "|-/\\+^v<>" `shouldParse` [((Position 0 0,Vertical),Nothing),((Position 0 1,Horizontal),Nothing),((Position 0 2,TurnSlash),Nothing),((Position 0 3,TurnBackSlash),Nothing),((Position 0 4,Intersection),Nothing),((Position 0 5,Vertical),Just (Position 0 5,(Up',0))),((Position 0 6,Vertical),Just (Position 0 6,(Down',0))),((Position 0 7,Horizontal),Just (Position 0 7,(Left',0))),((Position 0 8,Horizontal),Just (Position 0 8,(Right',0)))]
+      parse parseInit "" input1 `parseSatisfies` ((==) 15046 . M.size . fst)
+      parse parseInit "" input1 `parseSatisfies` ((==) 17 . M.size . snd)
 
   describe "solve - Part1" $ do
     it "should return the right result(s) for the testcases" $ do
@@ -44,7 +50,7 @@ run = hspec $ do
       D13P1.solve input4 `shouldBe` Position 54 50
 
     it "should solve the puzzle" $ do
-      D13P1.solve input `shouldBe` Position 36 136
+      D13P1.solve parsedInput `shouldBe` Position 36 136
 
   describe "solve - Part2" $ do
     it "should return the right result(s) for the testcases" $ do
@@ -52,4 +58,4 @@ run = hspec $ do
       D13P2.solve input4 `shouldBe` Position 100 50
 
     it "should solve the puzzle" $ do
-      D13P2.solve input `shouldBe` Position 111 53
+      D13P2.solve parsedInput `shouldBe` Position 111 53
