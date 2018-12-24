@@ -1,5 +1,9 @@
 module Day15Spec where
 
+import Text.Megaparsec (parse)
+--import Text.Megaparsec.Debug (dbg)
+import Test.Hspec.Megaparsec (shouldParse, parseSatisfies)
+
 import qualified Data.Map as M
 
 import Test.Hspec
@@ -61,6 +65,12 @@ run = hspec $ do
       (snd $ initialBattleground input) M.! (2,11) `shouldBe` Unit Goblin 3 200
       (snd $ initialBattleground input) M.! (5,22) `shouldBe` Unit Elf 3 200
 
+  describe "parse" $ do
+    it "should parse the input" $ do
+      parse parseLine "" "#.GE" `shouldParse` [(((0,0),Wall),Nothing),(((0,1),Open),Nothing),(((0,2),Open),Just ((0,2),Unit Goblin 3 200)),(((0,3),Open),Just ((0,3),Unit Elf 3 200))]
+      parse parseInit "" input1 `parseSatisfies` ((==) 1024 . M.size . fst)
+      parse parseInit "" input1 `parseSatisfies` ((==) 30 . M.size . snd)
+
   describe "move" $ do
     it "should do the right move for the testcases" $ do
       move testBg M.empty (1,1) (Unit Elf 3 200) `shouldBe` M.fromList [((1,2), (Unit Elf 3 200))]
@@ -76,14 +86,14 @@ run = hspec $ do
 -}
   describe "solve - Part1" $ do
     it "should return the right result(s) for the testcases" $ do
-      D15P1.solve [] `shouldBe` 1
+      D15P1.solve (M.empty, M.empty) `shouldBe` 1
 
     it "should solve the puzzle" $ do
-      D15P1.solve input `shouldBe` 1
+      D15P1.solve parsedInput `shouldBe` 1
 
   describe "solve - Part2" $ do
     it "should return the right result(s) for the testcases" $ do
-      D15P2.solve [] `shouldBe` 2
+      D15P2.solve (M.empty, M.empty) `shouldBe` 2
 
     it "should solve the puzzle" $ do
-      D15P2.solve input `shouldBe` 2
+      D15P2.solve parsedInput `shouldBe` 2

@@ -7,11 +7,11 @@ import Control.Exception (evaluate)
 import Day15
 
 -- | solve the puzzle
-solve :: [String] -> Int
+solve :: BattleGround -> Int
 solve _ = 1
 {-
-solve mapForTheBattleGround = rounds * hitpoints where
-  (rounds, units) = go 0 (initialBattleground mapForTheBattleGround) where
+solve battleGround = rounds * hitpoints where
+  (rounds, units) = go 0 battleGround where
       go r bg@(_, units')
         | elfsWin || goblinsWin = (r, units')
         | otherwise = go (r + 1) (nextRound bg)
@@ -23,5 +23,5 @@ solve mapForTheBattleGround = rounds * hitpoints where
 -- | main
 main :: IO ()
 main = do
-  (time, result) <- timeItT $ evaluate (solve input)
+  (time, result) <- timeItT $ evaluate (solve parsedInput)
   printf "Day15: Beverage Bandits: Part1: solve -> (%d, %f)\n" result time

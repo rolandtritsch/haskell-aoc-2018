@@ -30,15 +30,19 @@ Part 2 - ???
 -}
 module Day15 where
 
+import Text.Megaparsec (many, manyTill, eof, optional, (<|>), getSourcePos)
+import Text.Megaparsec.Pos (SourcePos, sourceLine, sourceColumn, unPos)
+import Text.Megaparsec.Char (newline, char)
+
+import Util (inputRaw, inputRaw1, inputParser, Parser)
+
 import Debug.Trace
 --import Text.Printf
 
 import Data.List (sort)
-import Data.Maybe (isJust, fromJust)
+import Data.Maybe (isJust, fromJust, catMaybes)
 import Safe (headMay)
 import qualified Data.Map as M
-
-import Util (inputRaw)
 
 data Field = Wall | Open deriving (Show, Eq)
 data UType = Goblin | Elf deriving (Show, Eq)
@@ -49,6 +53,10 @@ type Position = (Int, Int)
 type Fields = M.Map Position Field
 type Units = M.Map Position Unit
 type BattleGround = (Fields, Units)
+
+-- types for parsing.
+type Fields' = (Position, Field)
+type Units' = (Position, Unit)
 
 -- | read the input file
 input :: [String]
@@ -75,6 +83,39 @@ initialBattleground rows = (M.fromList fields, M.fromList units) where
       map' 'G' = Unit Goblin 3 200
       map' 'E' = Unit Elf 3 200
       map' _ = error "prepare: Unexpected pattern match."
+
+-- | read the input file
+input1 :: String
+input1 = inputRaw1 "input/Day15input.txt"
+
+-- | the parsed input.
+parsedInput :: BattleGround
+parsedInput = inputParser parseInit "input/Day15input.txt"
+
+parseInit :: Parser BattleGround
+parseInit = toBattleGround <$> manyTill (parseLine <* optional newline) eof where
+  toBattleGround lines' = (M.fromList fields, M.fromList units) where
+    lines'' = concat lines'
+    fields = map fst lines''
+    units = catMaybes $ map snd lines''
+
+parseLine :: Parser [(Fields', Maybe Units')]
+parseLine = many (parseWall <|> parseOpen <|> parseElf <|> parseGoblin)
+
+parseWall, parseOpen, parseElf, parseGoblin :: Parser (Fields', Maybe Units')
+parseWall = toWall <$> getSourcePos <* char '#' where
+  toWall sp = ((toPosition sp, Wall), Nothing)
+parseOpen = toOpen <$> getSourcePos <* char '.' where
+  toOpen sp = ((toPosition sp, Open), Nothing)
+parseElf = toElf <$> getSourcePos <* char 'E' where
+  toElf sp = ((toPosition sp, Open), Just $ (toPosition sp, Unit Elf 3 200))
+parseGoblin = toGoblin <$> getSourcePos <* char 'G' where
+  toGoblin sp = ((toPosition sp, Open), Just $ (toPosition sp, Unit Goblin 3 200))
+
+toPosition :: SourcePos -> Position
+toPosition sp = (row, col) where
+  row = (unPos (sourceLine sp)) - 1
+  col = (unPos (sourceColumn sp)) - 1
 
 -- | move a unit. But only, if the unit is not already in an attack position.
 move :: BattleGround -> Units -> Position -> Unit -> Units
