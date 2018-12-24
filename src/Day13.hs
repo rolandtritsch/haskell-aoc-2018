@@ -13,13 +13,11 @@ Part 2 - We *just* execute ticks until only one cart is left over.
 -}
 module Day13 where
 
---import Text.Megaparsec (many, eof, optional, (<|>), getParserState, State, PosState, SourcePos)
-import Text.Megaparsec
---import Text.Megaparsec.Char (newline, string, char)
-import Text.Megaparsec.Char
+import Text.Megaparsec (many, manyTill, eof, optional, (<|>), getSourcePos)
+import Text.Megaparsec.Pos (SourcePos, sourceLine, sourceColumn, unPos)
+import Text.Megaparsec.Char (newline, char, space)
 
---import Util (inputRaw, inputRaw1, inputParser, Parser)
-import Util
+import Util (inputRaw, inputRaw1, inputParser, Parser)
 
 import Data.Maybe (catMaybes)
 import Prelude hiding (cos)
@@ -98,7 +96,9 @@ parseCartRight = toCartRight <$> getSourcePos <* char '>' where
   toCartRight sp = ((toPosition sp, Horizontal), Just $ (toPosition sp, (Right', 0)))
 
 toPosition :: SourcePos -> Position
-toPosition (SourcePos _ row col) = Position ((unPos row) - 1) ((unPos col) - 1)
+toPosition sp = Position row col where
+  row = (unPos (sourceLine sp)) - 1
+  col = (unPos (sourceColumn sp)) - 1
 
 -- | move the carts by one tick. Note: Given that we are moving them one after the other
 -- we cannot look for collisions in the resulting cart positions, but need to check for
