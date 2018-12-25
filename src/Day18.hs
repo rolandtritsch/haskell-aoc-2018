@@ -14,7 +14,7 @@ module Day18 where
 import Text.Megaparsec ((<|>), manyTill, eof, optional)
 import Text.Megaparsec.Char (char, newline)
 
-import Util (inputRaw, inputRaw1, Parser)
+import Util (inputRaw, inputRaw1, inputParser, Parser)
 
 data Acre = Ground | Trees | Yard deriving (Show, Eq)
 type Acres = [Acre]
@@ -26,6 +26,10 @@ input = inputRaw "input/Day18input.txt"
 -- | read the input file (in one line)
 input1 :: String
 input1 = inputRaw1 "input/Day18input.txt"
+
+-- | the parsed input.
+parsedInput :: Acres
+parsedInput = inputParser parseArea "input/Day18input.txt"
 
 -- | parse an acre.
 parseAcre, parseGround, parseTrees, parseYard :: Parser Acre
