@@ -1,7 +1,7 @@
 module Day20Spec where
 
 import Text.Megaparsec (parse)
-import Text.Megaparsec.Debug (dbg)
+--import Text.Megaparsec.Debug (dbg)
 import Test.Hspec.Megaparsec (shouldParse)
 --import Test.Hspec.Megaparsec (shouldParse, parseSatisfies)
 
@@ -20,15 +20,14 @@ run = hspec $ do
   describe "parse" $ do
     it "should parse the regex/routes" $ do
       parse parsePath "" "NSWE" `shouldParse` Path [North,South,West,East]
-      parse parseBranch "" "(NS|WE)" `shouldParse` Branch (Path [North,South]) (Path [West,East])
-      parse parseBranch "" "(|WE)" `shouldParse` Branch (Path []) (Path [West,East])
-      parse parseBranch "" "(NS|)" `shouldParse` Branch (Path [North,South]) (Path [])
+      parse parseBranch "" "(NS|WE)" `shouldParse` Branch ([Path [North,South]]) ([Path [West,East]])
+      parse parseBranch "" "(|WE)" `shouldParse` Branch ([]) ([Path [West,East]])
+      parse parseBranch "" "(NS|)" `shouldParse` Branch ([Path [North,South]]) ([])
       parse parseRoute "" "NSWE" `shouldParse` Path [North, South, West, East]
-      parse (dbg "route" parseRoute) "" "(NS|WE)" `shouldParse` Branch (Path [North,South]) (Path [West,East])
-      --parse (dbg "routes" parseRoutes) "" "^N$" `shouldParse` [Branch (Path []) (Path [])]
-      --parse (dbg "routes" parseRoutes) "" "^$" `shouldParse` [Path [North, South, West, East], Branch (Path [North,South]) (Path [West,East]), Path [North, South, West, East]]
-      --parse (dbg "routes" parseRoutes) "" "^NSWE(NS|WE)NSWE$" `shouldParse` [Path [North, South, West, East], Branch (Path [North,South]) (Path [West,East]), Path [North, South, West, East]]
-      --parse parseRoutes "" "^NSWE(N|S)(E|)(|W)NSWE(N(S|(E|W)))NSWE(((N|S)|W)|E)$" `parseSatisfies` ((==) 0 . length)
+      parse parseRoute "" "(NS|WE)" `shouldParse` Branch ([Path [North,South]]) ([Path [West,East]])
+      parse parseRoutes "" "^N$" `shouldParse` [Path [North]]
+      parse parseRoutes "" "^NSWE(NS|WE)NSWE$" `shouldParse` [Path [North, South, West, East], Branch ([Path [North,South]]) ([Path [West,East]]), Path [North, South, West, East]]
+      --parse parseRoutes "" "^NSWE(N|S)(E|)(|W)NSWE(N(S|(E|W)))NSWE(((N|S)|W)|E)$" `shouldParse` []
       --parse parseRoutes "" input1 `parseSatisfies` ((==) 0 . length)
 
   describe "solve - Part1" $ do
@@ -36,11 +35,11 @@ run = hspec $ do
       D20P1.solve [] `shouldBe` 1
 
     it "should solve the puzzle" $ do
-      D20P1.solve input `shouldBe` 1
+      D20P1.solve parsedInput `shouldBe` 1
 
   describe "solve - Part2" $ do
     it "should return the right result(s) for the testcases" $ do
       D20P2.solve [] `shouldBe` 2
 
     it "should solve the puzzle" $ do
-      D20P2.solve input `shouldBe` 2
+      D20P2.solve parsedInput `shouldBe` 2

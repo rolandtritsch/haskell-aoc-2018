@@ -11,14 +11,13 @@ Part 2 - ???
 -}
 module Day20 where
 
-import Text.Megaparsec (many, (<|>))
+import Text.Megaparsec (many, manyTill, (<|>))
 import Text.Megaparsec.Char (char)
 
-import Util (inputRaw, inputRaw1, Parser)
+import Util (inputRaw, inputRaw1, inputParser, Parser)
 
 data Direction = North | South | West | East deriving (Show, Eq)
-data Route = Path [Direction] | Branch Route Route deriving (Show, Eq)
-
+data Route = Path [Direction] | Branch Routes Routes deriving (Show, Eq)
 type Routes = [Route]
 
 -- | read the input file
@@ -29,9 +28,13 @@ input = inputRaw "input/Day20input.txt"
 input1 :: String
 input1 = inputRaw1 "input/Day20input.txt"
 
+-- | the parsed input.
+parsedInput :: Routes
+parsedInput = inputParser parseRoutes "input/Day20input.txt"
+
 -- | parse the regex and turn it into a sequence/list of Paths and Branches.
 parseRoutes :: Parser Routes
-parseRoutes = parseBeginOfRegex *> many parsePath <* parseEndOfRegex
+parseRoutes = parseBeginOfRegex *> manyTill parseRoute parseEndOfRegex
 
 parseRoute :: Parser Route
 parseRoute = parseBranch <|> parsePath
@@ -42,10 +45,8 @@ parsePath = Path <$> many parseDirection
 parseBranch :: Parser Route
 parseBranch = Branch
   <$ parseBeginOfBranch
-  <*> parseRoute
-  <* parseBranchSeperator
-  <*> parseRoute
-  <* parseEndOfBranch
+  <*> manyTill parseRoute parseBranchSeperator
+  <*> manyTill parseRoute parseEndOfBranch
 
 parseBeginOfRegex, parseEndOfRegex :: Parser Char
 parseBeginOfRegex = char '^'
