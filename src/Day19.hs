@@ -15,7 +15,7 @@ import Text.Megaparsec (manyTill, eof, (<|>), optional)
 import Text.Megaparsec.Char (string, newline, space1)
 import Text.Megaparsec.Char.Lexer (decimal)
 
-import Util (inputRaw, inputRaw1, Parser)
+import Util (inputRaw, inputRaw1, inputParser, Parser)
 
 type InstructionPointer = Int
 data Register = Register Int deriving (Show, Eq)
@@ -48,15 +48,19 @@ input = inputRaw "input/Day19input.txt"
 input1 :: String
 input1 = inputRaw1 "input/Day19input.txt"
 
--- | parse the instruction pointer.
-parseIp :: Parser Int
-parseIp = string "#ip " *> decimal
+-- | the parsed input.
+parsedInput :: (InstructionPointer, Instructions)
+parsedInput = inputParser parseProgram "input/Day19input.txt"
 
 -- | parse the program.
 parseProgram :: Parser (InstructionPointer, Instructions)
 parseProgram = (,)
   <$> parseIp <* newline
   <*> manyTill (parseInstruction <* optional newline) eof
+
+-- | parse the instruction pointer.
+parseIp :: Parser Int
+parseIp = string "#ip " *> decimal
 
 -- | parse a register.
 parseRegister :: Parser Register

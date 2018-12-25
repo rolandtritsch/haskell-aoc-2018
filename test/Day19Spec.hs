@@ -22,14 +22,14 @@ run = hspec $ do
 
   describe "solve - Part1" $ do
     it "should return the right result(s) for the testcases" $ do
-      D19P1.solve [] `shouldBe` 1
+      D19P1.solve (0, []) `shouldBe` 1
 
     it "should solve the puzzle" $ do
-      D19P1.solve input `shouldBe` 1
+      D19P1.solve parsedInput `shouldBe` 1
 
   describe "solve - Part2" $ do
     it "should return the right result(s) for the testcases" $ do
-      D19P2.solve [] `shouldBe` 2
+      D19P2.solve (0, []) `shouldBe` 2
 
     it "should solve the puzzle" $ do
-      D19P2.solve input `shouldBe` 2
+      D19P2.solve parsedInput `shouldBe` 2
