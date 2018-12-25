@@ -27,11 +27,11 @@ run = hspec $ do
       D17P1.solve [] `shouldBe` 1
 
     it "should solve the puzzle" $ do
-      D17P1.solve input `shouldBe` 1
+      D17P1.solve parsedInput `shouldBe` 1
 
   describe "solve - Part2" $ do
     it "should return the right result(s) for the testcases" $ do
       D17P2.solve [] `shouldBe` 2
 
     it "should solve the puzzle" $ do
-      D17P2.solve input `shouldBe` 2
+      D17P2.solve parsedInput `shouldBe` 2

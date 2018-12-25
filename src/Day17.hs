@@ -17,10 +17,12 @@ import Text.Megaparsec.Char.Lexer (decimal)
 
 import qualified Data.Map as M
 
-import Util (inputRaw, inputRaw1, Parser)
+import Util (inputRaw, inputRaw1, inputParser, Parser)
 
 type Position = (Int, Int)
 data Vein = Vein Position Position deriving (Show, Eq)
+type Veins = [Vein]
+
 data Ground = Sand | Clay deriving (Show, Eq)
 data Water = Flowing | Settled deriving (Show, Eq)
 
@@ -34,6 +36,10 @@ input = inputRaw "input/Day17input.txt"
 -- | read the input file
 input1 :: String
 input1 = inputRaw1 "input/Day17input.txt"
+
+-- | the parsed input.
+parsedInput :: Veins
+parsedInput = inputParser parseVeins "input/Day17input.txt"
 
 -- | parse a horizontal vein.
 parseHorizontalVein :: Parser Vein
@@ -63,5 +69,5 @@ parseVerticalVein = toVein
     toVein y x x' = Vein (x,y) (x',y)
 
 -- | parse all the veins.
-parseVeins :: Parser [Vein]
+parseVeins :: Parser Veins
 parseVeins = manyTill (parseHorizontalVein <|> parseVerticalVein <* optional newline) eof
