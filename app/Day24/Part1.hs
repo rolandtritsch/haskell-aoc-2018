@@ -7,11 +7,11 @@ import Control.Exception (evaluate)
 import Day24
 
 -- | solve the puzzle
-solve :: [String] -> Integer
+solve :: Armys -> Int
 solve _ = 1
 
 -- | main
 main :: IO ()
 main = do
-  (time, result) <- timeItT $ evaluate (solve input)
-  printf "Day24: Template: Part1: solve -> (%d, %f)\n" result time
+  (time, result) <- timeItT $ evaluate (solve parsedInput)
+  printf "Day24: Immune System Simulator 20XX: Part1: solve -> (%d, %f)\n" result time
