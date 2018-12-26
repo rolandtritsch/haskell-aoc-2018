@@ -13,7 +13,7 @@ do
   done
 done
 
-for d in {10..24}
+for d in {10..25}
 do
   export DAY=${d}
   for p in {1..2}
