@@ -5,6 +5,7 @@ import Test.Hspec.Megaparsec (parseSatisfies)
 
 import Test.Hspec
 
+--import Day19 (parseProgram, Instruction(Seti), Register)
 import Day19 (parseProgram)
 
 import Day21
@@ -17,6 +18,8 @@ run = hspec $ do
     it "should return the input" $ do
       head input `shouldBe` "#ip 2"
       last input `shouldBe` "seti 5 3 2"
+      fst parsedInput `shouldBe` 2
+      --last (snd parsedInput) `shouldBe` Seti (Register 5) 3 2
 
   describe "parse" $ do
     it "should parse the program" $ do
