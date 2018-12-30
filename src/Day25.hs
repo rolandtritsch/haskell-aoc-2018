@@ -3,15 +3,19 @@ Problem: <https://adventofcode.com/2018/day/25>
 
 Solution:
 
-General - ???
+General - Last, but not least ... :).
 
-Part 1 - ???
+The trick here is to realize that you can build a graph
+of nodes and if you link the nodes both ways you can use
+the "strongly connected components" (scc) function to
+find the (number of) components (subgraphs) that are
+connected.
 
-Part 2 - ???
+Part 1 - Look for the number of sccs.
+
+Part 2 - Merry Christmas.
 -}
 module Day25 where
-
-import Prelude hiding (Word)
 
 import Text.Megaparsec (manyTill, eof, optional)
 import Text.Megaparsec.Char (newline, string)
@@ -46,3 +50,12 @@ parsePoint = (,,,)
   <*> signedInteger
   <* string ","
   <*> signedInteger
+
+-- | the (manhattan) distance between two points.
+distance :: Point -> Point -> Int
+distance (w, x, y, z) (w', x', y', z') = (abs (w - w')) + (abs (x - x')) + (abs (y - y')) + (abs (z - z'))
+
+-- | find all parent/child relationships (two points that have a distance of 3 (or less)).
+edges :: Points -> [((), Point, Points)]
+edges ps = foldl go [] ps where
+  go edges' p' = ((), p', filter ((<= 3) . distance p') ps) : edges'

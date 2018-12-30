@@ -4,11 +4,14 @@ import System.TimeIt (timeItT)
 import Text.Printf (printf)
 import Control.Exception (evaluate)
 
+import qualified Data.Graph as G
+
 import Day25
 
 -- | solve the puzzle
 solve :: Points -> Int
-solve _ = 1
+solve ps = length $ G.scc graph where
+  (graph, _, _) = G.graphFromEdges $ edges ps
 
 -- | main
 main :: IO ()

@@ -563,6 +563,7 @@ executables:
     dependencies:
     - haskell-aoc
     - timeit
+    - containers
 
   haskell-aoc-day25p2:
     main: app/Day25/Part2.hs
@@ -1094,5 +1095,6 @@ tests:
     - haskell-aoc
     - hspec
     - timeit
+    - containers
     - megaparsec
     - hspec-megaparsec
