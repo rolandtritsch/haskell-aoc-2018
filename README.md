@@ -2,6 +2,10 @@
 
 # [Advent of Code](https://adventofcode.com) - 2018 (Haskell Edition)
 
+Note: This is still work in progress :) ...
+
+![Tree](https://www.dropbox.com/s/wjpu4qn5kxe5l7l/aoc0.png?dl=0&raw=1)
+
 Note: Complete solutions (and a benchmark) for 2017 (in Scala, Haskell and Eta) can be found ([here](https://github.com/rolandtritsch/scala-aoc-2017); star it, if you like it :)).
 
 To make this work you need to ...
