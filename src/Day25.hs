@@ -58,4 +58,8 @@ distance (w, x, y, z) (w', x', y', z') = (abs (w - w')) + (abs (x - x')) + (abs 
 -- | find all parent/child relationships (two points that have a distance of 3 (or less)).
 edges :: Points -> [((), Point, Points)]
 edges ps = foldl go [] ps where
-  go edges' p' = ((), p', filter ((<= 3) . distance p') ps) : edges'
+  go es p = ((), p, pChildren) : es where
+    pChildren = filter (byDistance 3) ps where
+      byDistance d p'
+        | distance p p' <= d = True
+        | otherwise = False
