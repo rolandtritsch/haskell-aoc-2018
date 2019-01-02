@@ -1078,6 +1078,7 @@ tests:
     - timeit
     - megaparsec
     - hspec-megaparsec
+    - containers
 
   haskell-aoc-test-day25:
     main: Day25Spec.hs

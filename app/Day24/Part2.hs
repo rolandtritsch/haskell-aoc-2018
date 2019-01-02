@@ -7,7 +7,7 @@ import Control.Exception (evaluate)
 import Day24
 
 -- | solve the puzzle
-solve :: Armys -> Int
+solve :: Groups -> Int
 solve _ = 2
 
 -- | main
