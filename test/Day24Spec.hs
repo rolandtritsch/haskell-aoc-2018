@@ -30,22 +30,23 @@ run = hspec $ do
 
   describe "selectTargets" $ do
     it "should return the targets for the given armys" $ do
+      -- (3,1) (1,2) (0,3) (2,0)
       selectTargets testInput0 `shouldBe` M.fromList [(0,3),(1,2),(2,0),(3,1)]
 
   describe "fight" $ do
     it "should return the next groups after a (round of a) fight" $ do
-      fight testInput0 (selectTargets testInput0) `shouldBe` M.fromList [(0,Group {gType = WhiteBloodCells, gUnits = 17, gHitpoints = 5390, gAttackDamage = 4507, gAttackType = Fire, gInitiativeLevel = 2, gWeakTo = [Radiation,Bludgeoning], gImmuneTo = []}),(1,Group {gType = WhiteBloodCells, gUnits = 989, gHitpoints = 1274, gAttackDamage = 25, gAttackType = Slashing, gInitiativeLevel = 3, gWeakTo = [Bludgeoning,Slashing], gImmuneTo = [Fire]}),(2,Group {gType = Viruses, gUnits = 801, gHitpoints = 4706, gAttackDamage = 116, gAttackType = Bludgeoning, gInitiativeLevel = 1, gWeakTo = [Radiation], gImmuneTo = []}),(3,Group {gType = Viruses, gUnits = 4482, gHitpoints = 2961, gAttackDamage = 12, gAttackType = Slashing, gInitiativeLevel = 4, gWeakTo = [Fire,Cold], gImmuneTo = [Radiation]})]
+      fight testInput0 (selectTargets testInput0) `shouldBe` M.fromList [(1,Group {gType = WhiteBloodCells, gUnits = 905, gHitpoints = 1274, gAttackDamage = 25, gAttackType = Slashing, gInitiativeLevel = 3, gWeakTo = [Bludgeoning,Slashing], gImmuneTo = [Fire]}),(2,Group {gType = Viruses, gUnits = 797, gHitpoints = 4706, gAttackDamage = 116, gAttackType = Bludgeoning, gInitiativeLevel = 1, gWeakTo = [Radiation], gImmuneTo = []}),(3,Group {gType = Viruses, gUnits = 4434, gHitpoints = 2961, gAttackDamage = 12, gAttackType = Slashing, gInitiativeLevel = 4, gWeakTo = [Fire,Cold], gImmuneTo = [Radiation]})]
 
   describe "combat" $ do
     it "should return the winning groups" $ do
-      combat testInput0 `shouldBe` M.fromList []
+      combat testInput0 `shouldBe` M.fromList [(2,Group {gType = Viruses, gUnits = 782, gHitpoints = 4706, gAttackDamage = 116, gAttackType = Bludgeoning, gInitiativeLevel = 1, gWeakTo = [Radiation], gImmuneTo = []}),(3,Group {gType = Viruses, gUnits = 4434, gHitpoints = 2961, gAttackDamage = 12, gAttackType = Slashing, gInitiativeLevel = 4, gWeakTo = [Fire,Cold], gImmuneTo = [Radiation]})]
 
   describe "solve - Part1" $ do
     it "should return the right result(s) for the testcases" $ do
-      D24P1.solve M.empty `shouldBe` 1
+      D24P1.solve testInput0 `shouldBe` 5216
 
     it "should solve the puzzle" $ do
-      D24P1.solve parsedInput `shouldBe` 1
+      D24P1.solve parsedInput `shouldBe` 18346
 
   describe "solve - Part2" $ do
     it "should return the right result(s) for the testcases" $ do

@@ -11,14 +11,12 @@ Part 2 - ???
 -}
 module Day24 where
 
-import Debug.Trace
-
 import Text.Megaparsec (many, eof, optional, (<|>))
 import Text.Megaparsec.Char (newline, string)
 
 import Util (inputRaw, inputRaw1, inputParser, Parser, integer)
 
-import Data.List (sortBy)
+import Data.List (sortBy, delete)
 import Data.Maybe (fromJust)
 import Data.Ord
 
@@ -137,8 +135,8 @@ byEffectivePower g g'
 calcDamage :: Group -> Group -> Int
 calcDamage attacker enemy
    | elem (gAttackType attacker) (gImmuneTo enemy) = 0
-   | elem (gAttackType attacker) (gWeakTo enemy) = (gAttackDamage attacker) * 2
-   | otherwise = gAttackDamage attacker
+   | elem (gAttackType attacker) (gWeakTo enemy) = (effectivePower' attacker) * 2
+   | otherwise = effectivePower' attacker
 
 -- | select a group to attack (white blood cells against viruses).
 --
@@ -180,11 +178,11 @@ selectTarget attacker availableEnemies
   where
     possibleDamage = map (calcDamage' attacker) (M.toList availableEnemies)
     calcDamage' a (eId, e) = (calcDamage a e , eId, e)
-    (highestDamage, _, _) = traceShow possibleDamage $ head $ sortBy (comparing (Down . byDamage)) possibleDamage where
+    (highestDamage, _, _) = head $ sortBy (comparing (Down . byDamage)) possibleDamage where
       byDamage (d, _, _) = d
     enemyId'
       | highestDamage == 0 = Nothing
-      | otherwise = traceShow highestDamage $ Just $ snd' $ head $ reverse $ sortBy byEffectivePower' $ filter ((== highestDamage) . fst') possibleDamage
+      | otherwise = Just $ snd' $ head $ reverse $ sortBy byEffectivePower' $ filter ((== highestDamage) . fst') possibleDamage
       where
         fst' (d, _, _) = d
         snd' (_, eId, _) = eId
@@ -197,6 +195,18 @@ selectTarget attacker availableEnemies
 calcHealth :: Group -> Int
 calcHealth g = (gUnits g) * (gHitpoints g)
 
+-- | helper function to only insert into a map, if the key does not exist
+-- yet (otherwise keep the old value)
+onlyIfNotThere :: Group -> Group -> Group
+onlyIfNotThere _ ov = ov
+
+-- | update the groups.
+updateGroups :: GId -> GId -> Maybe Group -> [GId] -> Groups -> Groups -> ([GId], Groups)
+updateGroups aId eId Nothing remainingAttackerIds groups nextGroups = (remainingAttackerIds', nextGroups') where
+  remainingAttackerIds' = delete eId remainingAttackerIds
+  nextGroups' = M.delete eId $ M.insertWith onlyIfNotThere aId (groups M.! aId) nextGroups
+updateGroups aId eId (Just g) remainingAttackerIds groups nextGroups = (remainingAttackerIds, nextGroups') where
+  nextGroups' = M.insert eId g $ M.insertWith onlyIfNotThere aId (groups M.! aId) nextGroups
 -- | fight the fight (one round) and return the remaining groups (with a/the
 -- updated unit count).
 --
@@ -215,35 +225,36 @@ calcHealth g = (gUnits g) * (gHitpoints g)
 fight :: Groups -> Targets -> Groups
 fight groups targets = go attackingOrder M.empty where
   attackingOrder = map fst $ sortBy (comparing (Down . gInitiativeLevel . snd)) (M.toList groups)
-  insertGIdIfNotThere gId g gs
-    | M.member gId gs = gs
-    | otherwise = M.insert gId g gs
-  insertGIdIfNotNothing gId (Just g) gs = M.insert gId g gs
-  insertGIdIfNotNothing gId Nothing gs = M.delete gId gs
   go (attackerId:[]) nextGroups
     | M.member attackerId targets = nextGroups'
     | otherwise = nextGroups''
     where
       defenderId = targets M.! attackerId
-      attackedGroup = attack (groups M.! attackerId) (groups M.! defenderId)
-      nextGroups' = insertGIdIfNotThere attackerId (groups M.! attackerId) $ insertGIdIfNotNothing defenderId attackedGroup nextGroups
-      nextGroups'' = insertGIdIfNotThere attackerId (groups M.! attackerId) nextGroups
+      attackedGroup
+        | M.member attackerId nextGroups = attack (nextGroups M.! attackerId) (groups M.! defenderId)
+        | otherwise = attack (groups M.! attackerId) (groups M.! defenderId)
+      (_, nextGroups') = updateGroups attackerId defenderId attackedGroup [] groups nextGroups
+      nextGroups'' = M.insertWith onlyIfNotThere attackerId (groups M.! attackerId) nextGroups
   go (attackerId:remainingAttackerIds) nextGroups
-    | M.member attackerId targets = go remainingAttackerIds nextGroups'
+    | M.member attackerId targets = go remainingAttackerIds' nextGroups'
     | otherwise = go remainingAttackerIds nextGroups''
     where
       defenderId = targets M.! attackerId
-      attackedGroup = attack (groups M.! attackerId) (groups M.! defenderId)
-      nextGroups' = insertGIdIfNotThere attackerId (groups M.! attackerId) $ insertGIdIfNotNothing defenderId attackedGroup nextGroups
-      nextGroups'' = insertGIdIfNotThere attackerId (groups M.! attackerId) nextGroups
+      attackedGroup
+        | M.member attackerId nextGroups = attack (nextGroups M.! attackerId) (groups M.! defenderId)
+        | otherwise = attack (groups M.! attackerId) (groups M.! defenderId)
+      (remainingAttackerIds', nextGroups') = updateGroups attackerId defenderId attackedGroup remainingAttackerIds groups nextGroups
+      nextGroups'' = M.insertWith onlyIfNotThere attackerId (groups M.! attackerId) nextGroups
   go _ _ = error "fight: go: Unexpected pattern match."
 
 -- | attack a target and return the damaged target (or nothing, if the target was destroyed).
 attack :: Group -> Group -> Maybe Group
 attack attacker defender
-  | calcDamage attacker defender >= calcHealth defender = Nothing
+  | damage >= health = Nothing
   | otherwise = Just $ defender { gUnits = remainingUnits }
   where
+    damage = calcDamage attacker defender
+    health = calcHealth defender
     remainingUnits = (gUnits defender) - killedUnits
     killedUnits = div (calcDamage attacker defender) (gHitpoints defender)
 
