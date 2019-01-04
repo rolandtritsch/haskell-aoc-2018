@@ -543,6 +543,7 @@ executables:
     dependencies:
     - haskell-aoc
     - timeit
+    - containers
 
   haskell-aoc-day24p2:
     main: app/Day24/Part2.hs
