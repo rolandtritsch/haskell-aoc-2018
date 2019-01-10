@@ -4,7 +4,6 @@ import System.TimeIt (timeItT)
 import Text.Printf (printf)
 import Control.Exception (evaluate)
 
-import Data.List (sum)
 import qualified Data.Map as M
 
 import Day24
