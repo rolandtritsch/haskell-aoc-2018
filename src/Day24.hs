@@ -3,7 +3,27 @@ Problem: <https://adventofcode.com/2018/day/24>
 
 Solution:
 
-General - ???
+General - Wow. Biggest challenge for this one: To read and understand
+the problem statement and to turn it into code.
+
+Main idea(s) are ...
+
+* I will call the groups that make up the immune system the "white blood
+cells" and the groups that make up the infection the "viruses".
+
+* read all of the groups. Initially I had two seperate lists of groups,
+but some of the decisions need to be made regardless of the group type,
+means it is easier to put the group type into the group.
+
+* then I realized that in the target selection phase and in the attack
+phase there are corner cases that require me to uniquely identify which
+group I am reading/updating/deleting. Means I need a primary key. The
+primary key are all fields besides the number of units (the only field
+that actually changes during the combat). Was not sure, if it is a good
+idea to have such a large primary key and decided to create an artificial
+primary key (the group id (gId)).
+
+* means most of the processing happens by processing gIds
 
 Part 1 - ???
 
@@ -17,7 +37,7 @@ import Text.Megaparsec.Char (newline, string)
 import Util (inputRaw, inputRaw1, inputParser, Parser, integer)
 
 import Data.List (sortBy, delete)
-import Data.Maybe (fromJust)
+import Data.Maybe (fromJust, isNothing)
 import Data.Ord
 
 import qualified Data.Map as M
@@ -41,7 +61,13 @@ data Group = Group {
   gInitiativeLevel :: Int,
   gWeakTo :: [AttackType],
   gImmuneTo :: [AttackType]
-  } deriving (Show, Eq, Ord)
+  } deriving (Show, Eq)
+
+-- | order groups by decreasing effective power and decreasing initiative level
+instance Ord Group where
+  compare g g'
+    | (effectivePower' g) == (effectivePower' g') = comparing (Down . gInitiativeLevel) g g'
+    | otherwise = comparing (Down . effectivePower') g g'
 
 type GId = Int
 type Groups = M.Map GId Group
@@ -55,7 +81,7 @@ input = inputRaw "input/Day24input.txt"
 input1 :: String
 input1 = inputRaw1 "input/Day24input.txt"
 
--- | the parsed input.
+-- | the parsed input (building a/the map of GId to Group).
 parsedInput :: Groups
 parsedInput = M.fromList $ zip [0..] $ inputParser parseGroups "input/Day24input.txt"
 
@@ -118,6 +144,8 @@ parseFire = Fire <$ string "fire"
 parseRadiation = Radiation <$ string "radiation"
 parseSlashing = Slashing <$ string "slashing"
 
+---------------------------------------------------------------------------------
+
 -- | calc the effective power of a group.
 effectivePower :: GId -> Groups -> Int
 effectivePower gId gs = (gUnits (gs M.! gId)) * (gAttackDamage (gs M.! gId))
@@ -125,50 +153,44 @@ effectivePower gId gs = (gUnits (gs M.! gId)) * (gAttackDamage (gs M.! gId))
 effectivePower' :: Group -> Int
 effectivePower' g = (gUnits g) * (gAttackDamage g)
 
--- | sorting function (by increasing effective power and increasing initiative level)
-byEffectivePower :: Group -> Group -> Ordering
-byEffectivePower g g'
-  | (effectivePower' g) == (effectivePower' g') = compare (gInitiativeLevel g) (gInitiativeLevel g')
-  | otherwise = compare (effectivePower' g) (effectivePower' g')
+-- | calculate the damage an attacker can do to a defender.
+calcDamage :: GId -> GId -> Groups -> Int
+calcDamage attackerId defenderId groups
+   | elem (gAttackType attacker) (gImmuneTo defender) = 0
+   | elem (gAttackType attacker) (gWeakTo defender) = (effectivePower attackerId groups) * 2
+   | otherwise = effectivePower' attacker
+   where
+     attacker = groups M.! attackerId
+     defender = groups M.! defenderId
 
--- | calculate the damage an attacker can do on an enemy.
-calcDamage :: Group -> Group -> Int
-calcDamage attacker enemy
-   | elem (gAttackType attacker) (gImmuneTo enemy) = 0
-   | elem (gAttackType attacker) (gWeakTo enemy) = (effectivePower' attacker) * 2
+calcDamage' :: Group -> Group -> Int
+calcDamage' attacker defender
+   | elem (gAttackType attacker) (gImmuneTo defender) = 0
+   | elem (gAttackType attacker) (gWeakTo defender) = (effectivePower' attacker) * 2
    | otherwise = effectivePower' attacker
 
 -- | select a group to attack (white blood cells against viruses).
 --
 -- Algorithm goes like this ...
 --
--- * sort by effectivePower (and initiativeLevel)
--- * reverse the sort (to get the groups in descending order)
--- * go over the groups and select a target for every group
+-- * get (sorted) list of target ids and go over the ids
+-- * for every id select a target (if there is one)
 --
 selectTargets :: Groups -> Targets
-selectTargets groups = go selectionOrder wbcs viruses M.empty where
+selectTargets groups = snd $ foldl go ((wbcs, viruses), M.empty) selectionOrder where
   wbcs = M.filter ((== WhiteBloodCells) . gType) groups
   viruses = M.filter ((== Viruses) . gType) groups
-  selectionOrder = reverse $ map fst $ sortBy byEffectivePower' (M.toList groups) where
-    byEffectivePower' (_, g) (_, g') = byEffectivePower g g'
-  insertGId gId' (Just eId') targets' = M.insert gId' eId' targets'
-  insertGId _ Nothing targets' = targets'
-  go (gId':[]) wbcs' viruses' targets'
-    | (gType g') == WhiteBloodCells = insertGId gId' selectedVirusGId targets'
-    | (gType g') == Viruses = insertGId gId' selectedWbcsGId targets'
-    where
-      g' = groups M.! gId'
-      (selectedVirusGId, _) = selectTarget g' viruses'
-      (selectedWbcsGId, _) = selectTarget g' wbcs'
-  go (gId':gIds') wbcs' viruses' targets'
-    | (gType g') == WhiteBloodCells = go gIds' wbcs' remainingViruses (insertGId gId' selectedVirusGId targets')
-    | (gType g') == Viruses = go gIds' remainingWbcs viruses' (insertGId gId' selectedWbcsGId targets')
+  selectionOrder = map fst $ sortBy (comparing snd) (M.toList groups)
+  go ((wbcs', viruses'), targets') gId'
+    | (gType g') == WhiteBloodCells && isNothing selectedVirusGId = ((wbcs', remainingViruses), targets')
+    | (gType g') == Viruses && isNothing selectedWbcsGId = ((remainingWbcs, viruses'), targets')
+    | (gType g') == WhiteBloodCells = ((wbcs', remainingViruses), M.insert gId' (fromJust selectedVirusGId) targets')
+    | (gType g') == Viruses = ((remainingWbcs, viruses'), M.insert gId' (fromJust selectedWbcsGId) targets')
     where
       g' = groups M.! gId'
       (selectedVirusGId, remainingViruses) = selectTarget g' viruses'
       (selectedWbcsGId, remainingWbcs) = selectTarget g' wbcs'
-  go _ _ _ _ = error "selectTargets: go: Unexpected pattern match."
+  go _ _ = error "selectTargets: go: Unexpected pattern match."
 
 -- | select a/the target for a given group from the map of availableEnemies.
 selectTarget :: Group -> Groups -> (Maybe GId, Groups)
@@ -176,17 +198,17 @@ selectTarget attacker availableEnemies
   | M.null availableEnemies = (Nothing, M.empty)
   | otherwise = (enemyId', remainingEnemies')
   where
-    possibleDamage = map (calcDamage' attacker) (M.toList availableEnemies)
-    calcDamage' a (eId, e) = (calcDamage a e , eId, e)
+    possibleDamage = map (calcDamage'' attacker) (M.toList availableEnemies)
+    calcDamage'' a (eId, e) = (calcDamage' a e , eId, e)
     (highestDamage, _, _) = head $ sortBy (comparing (Down . byDamage)) possibleDamage where
       byDamage (d, _, _) = d
     enemyId'
       | highestDamage == 0 = Nothing
-      | otherwise = Just $ snd' $ head $ reverse $ sortBy byEffectivePower' $ filter ((== highestDamage) . fst') possibleDamage
+      | otherwise = Just $ snd' $ head $ sortBy (comparing trd') $ filter ((== highestDamage) . fst') possibleDamage
       where
         fst' (d, _, _) = d
         snd' (_, eId, _) = eId
-        byEffectivePower' (_, _, g) (_, _, g') = byEffectivePower g g'
+        trd' (_, _, g) = g
     remainingEnemies'
       | highestDamage == 0 = availableEnemies
       | otherwise = M.delete (fromJust enemyId') availableEnemies
@@ -222,6 +244,9 @@ updateGroups aId eId (Just g) remainingAttackerIds groups nextGroups = (remainin
 --   - otherwise add it to the map of groups that will fight the next fight (if it not
 --     there already)
 --
+-- Note: This cannot be a fold. This needs to be a recursion, because I am changing
+-- what is left over to iterate over (remainingAttackerIds).
+--
 fight :: Groups -> Targets -> Groups
 fight groups targets = go attackingOrder M.empty where
   attackingOrder = map fst $ sortBy (comparing (Down . gInitiativeLevel . snd)) (M.toList groups)
@@ -253,10 +278,10 @@ attack attacker defender
   | damage >= health = Nothing
   | otherwise = Just $ defender { gUnits = remainingUnits }
   where
-    damage = calcDamage attacker defender
+    damage = calcDamage' attacker defender
     health = calcHealth defender
     remainingUnits = (gUnits defender) - killedUnits
-    killedUnits = div (calcDamage attacker defender) (gHitpoints defender)
+    killedUnits = div (calcDamage' attacker defender) (gHitpoints defender)
 
 -- | compat it out (between the white bloodcells and the viruses) until one side
 -- has no groups left over.
