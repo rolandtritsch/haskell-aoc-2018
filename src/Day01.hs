@@ -16,7 +16,7 @@ module Day01 where
 import Text.Megaparsec (manyTill, eof, optional)
 import Text.Megaparsec.Char (newline)
 
-import Util (inputRaw, inputRaw1, inputParser, Parser, signedInteger, )
+import Util (inputRaw, inputRaw1, inputParser, Parser, signedInteger)
 
 type Frequency = Int
 type Frequencies = [Frequency]
