@@ -1,4 +1,7 @@
 haskell-aoc.cabal
+
+.vscode/
 .stack-work/
 dist/
+
 **/#*#
