@@ -77,4 +77,4 @@ claim :: Fabric -> Claim -> Fabric
 claim f (Claim cid (row, col) (rdim, cdim)) = foldl claimInch f cells where
   cells = [(r, c) | r <- [row..row + rdim - 1], c <- [col..col + cdim - 1]]
   claimInch f' p' = M.insert p' (cids ++ [cid]) f' where
-    cids = M.findWithDefault ([]) p' f'
+    cids = M.findWithDefault [] p' f'
