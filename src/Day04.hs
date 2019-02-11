@@ -66,11 +66,11 @@ type Shifts = M.Map Id Records
 
 -- | read the input file
 input :: Events
-input = input2Stream $ sort $ inputRaw "input/Day04input.txt"
+input = (input2Stream . sort . inputRaw) "input/Day04input.txt"
 
 -- | turn input into event stream.
 input2Stream :: [String] -> Events
-input2Stream ls = map event ls where
+input2Stream = map event where
   event l
     | isStartOfShift = StartShift (read $ tokens !! 7) date
     | otherwise = StateChange date
@@ -142,7 +142,7 @@ record2Shift rs = M.fromListWith (++) $ map (\r@(Record gid _ _ _) -> (gid, [r])
 mostAsleep :: Shifts -> (Id, Int)
 mostAsleep shifts = maximumBy (comparing snd) $ M.toList sumOfMinsByGid where
   sumOfMinsByGid = M.map sumOfMins shifts where
-    sumOfMins rs = (length . filter (\(Record _ _ _ s) -> (==) s Asleep)) rs
+    sumOfMins = (length . filter (\(Record _ _ _ s) -> (==) s Asleep))
 
 -- | do a histogram of (minOfTheHour, minsAsleep) (for the given list of records).
 histogram :: [Record] -> [(Int, Int)]
