@@ -34,7 +34,7 @@ type Work = M.Map Step Duration
 
 -- | read the input file.
 input :: [Dependency]
-input = map process $ inputRaw "input/Day07input.txt" where
+input = (map process . inputRaw) "input/Day07input.txt" where
   -- Step J must be finished before step E can begin.
   process line = (head $ words line !! 1, head $ words line !! 7)
 
@@ -59,7 +59,7 @@ parseDependency = (,)
 
 -- | build a/the graph.
 buildGraph :: [Dependency] -> Graph
-buildGraph ds = foldl go (M.empty, M.empty) ds where
+buildGraph = foldl go (M.empty, M.empty) where
   go (parents, children) (from, to) = (parents', children') where
     parents' = M.insertWith (++) to [from] parents
     children' = M.insertWith (++) from [to] children

@@ -39,7 +39,7 @@ import Text.Megaparsec.Char (newline, string)
 import Util (inputRaw, inputRaw1, inputParser, Parser, integer)
 
 import Data.Ord (comparing)
-import Data.List (minimumBy, nub, groupBy, maximumBy, sortBy)
+import Data.List (minimumBy, nub, groupBy, maximumBy, sortOn)
 import Data.List.Split (splitOneOf)
 import qualified Data.Map as M
 
@@ -119,9 +119,9 @@ infinite (b, grid) = nub $ foldl notNothing [] originsOnTheBoundary where
 -- | get the largest area (that is not infinite).
 largest :: Grid -> ((Int, Int), Int)
 largest (b, grid) = maximumBy (comparing snd) areas where
-  areas = map size $ groupBy byOrigin $ sortBy (comparing snd) $ filter notInfinite (M.toList grid) where
+  areas = (map size . groupBy byOrigin . sortOn snd . filter notInfinite) (M.toList grid) where
     ios = infinite (b, grid)
-    notInfinite (_, o) = not $ elem o ios
+    notInfinite (_, o) = notElem o ios
     byOrigin (_, o) (_, o') = (==) o o'
     size a = (snd $ head a, length a)
 

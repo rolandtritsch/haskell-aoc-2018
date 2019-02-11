@@ -23,7 +23,7 @@ type Grid = M.Map Coordinate PowerLevel
 
 -- | read the input.
 input :: SerialNumber
-input = read $ head $ inputRaw "input/Day11input.txt"
+input = (read . head . inputRaw) "input/Day11input.txt"
 
 -- | the dimension of the grid.
 dimension :: ((Int, Int),(Int, Int))

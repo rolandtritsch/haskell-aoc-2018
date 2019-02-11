@@ -35,11 +35,11 @@ type Polymer = [Unit]
 
 -- | read the input file
 input :: Polymer
-input = buildPolymer $ head $ inputRaw "input/Day05input.txt" where
+input = (buildPolymer . head . inputRaw) "input/Day05input.txt" where
 
 -- | build a/the polymer.
 buildPolymer :: String -> Polymer
-buildPolymer line = map buildPolymer' line where
+buildPolymer = map buildPolymer' where
   buildPolymer' c = Unit (toLower c) (p (isLower c)) where
     p True = Minus
     p False = Plus
@@ -68,14 +68,14 @@ canReact (Unit t p) (Unit t' p') = t == t' && p /= p'
 -- | take a Polymer, find the first 2 Units that can react, react and
 -- return the resulting Polymer.
 react :: Polymer -> Polymer
-react p = foldr bang [] p where
+react = foldr bang [] where
   bang u (u':us')
     | canReact u u' = us'
     | otherwise = u:u':us'
   bang u [] = [u]
 
 react'' :: Polymer -> Polymer
-react'' p = foldl bang [] p where
+react'' = foldl bang [] where
   bang [] u = [u]
   bang newP u
     | canReact (last newP) u = init newP

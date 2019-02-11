@@ -40,7 +40,7 @@ import Debug.Trace
 --import Text.Printf
 
 import Data.List (sort)
-import Data.Maybe (isJust, fromJust, catMaybes)
+import Data.Maybe (isJust, fromJust, mapMaybe)
 import Safe (headMay)
 import qualified Data.Map as M
 
@@ -97,7 +97,7 @@ parseInit = toBattleGround <$> manyTill (parseLine <* optional newline) eof wher
   toBattleGround lines' = (M.fromList fields, M.fromList units) where
     lines'' = concat lines'
     fields = map fst lines''
-    units = catMaybes $ map snd lines''
+    units = mapMaybe snd lines''
 
 parseLine :: Parser [(Fields', Maybe Units')]
 parseLine = many (parseWall <|> parseOpen <|> parseElf <|> parseGoblin)
@@ -136,7 +136,7 @@ move bg@(_, units) currentUnits position unit
 --
 nextPosition :: BattleGround -> Position -> Position
 nextPosition (fields, units) position = trace "***" $ traceShow position $ traceShow np $ traceShow distances $ np where
-  np = fst $ head $ sort $ filter ((==) minDistance . snd) $ distances
+  np = (fst . minimum . filter ((==) minDistance . snd)) distances
   allDirections
     = [moveNorth position]
     ++ [moveSouth position]

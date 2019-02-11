@@ -44,7 +44,7 @@ input = (initialState, rules) where
   input' = inputRaw "input/Day12input.txt"
   firstLine = drop 15 $ head input'
   -- initial state: ##.##.##..#..#.#.#.#...#...#####.###... (...)
-  initialState = M.fromList $ zip [0..] (map ((== '#')) firstLine)
+  initialState = M.fromList $ zip [0..] (map (== '#') firstLine)
   rules = M.fromList $ map process $ drop 2 input' where
     process l = (note, alive (tokens !! 1)) where
       tokens = filter (not . null) $ splitOneOf " => " l
@@ -120,8 +120,8 @@ sumOfPotNumbers state = sum $ M.keys $ M.filter id state
 -- between generations is/becomes a constant. What we need to calculate
 -- the result is the number of generations it takes to reach that constant
 -- and what the constant is.
-detectShortcut :: Int -> Notes -> State -> (Int, Int, Int)
-detectShortcut gen notes state = go [] gen state where
+detectShortcut :: Notes -> Int -> State -> (Int, Int, Int)
+detectShortcut notes = go [] where
   go stack' gen' state'
     | lastTenDiffsAreTheSame = (stack' !! 10, gen' + 11, (stack' !! 0) - (stack' !! 1))
     | otherwise = go ((sumOfPotNumbers state') : stack') (gen' - 1) (evolve notes state')

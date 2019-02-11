@@ -26,7 +26,7 @@ data Recipes = Recipes Position Position (S.Seq Score) deriving (Show, Eq)
 
 -- | read the input file
 input :: String
-input = head $ inputRaw "input/Day14input.txt"
+input = (head . inputRaw) "input/Day14input.txt"
 
 -- | "cooking" the recipes :). Take the recipes and make new ones from it.
 cook :: Recipes -> Recipes

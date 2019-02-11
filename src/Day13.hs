@@ -19,7 +19,7 @@ import Text.Megaparsec.Char (newline, char, space)
 
 import Util (inputRaw, inputRaw1, inputParser, Parser)
 
-import Data.Maybe (catMaybes)
+import Data.Maybe (mapMaybe)
 import Prelude hiding (cos)
 import qualified Data.Map as M
 
@@ -70,7 +70,7 @@ parseInit = toGrid <$> manyTill (parseLine <* optional newline) eof where
   toGrid lines' = (M.fromList grid, M.fromList carts) where
     lines'' = concat lines'
     grid = map fst lines''
-    carts = catMaybes $ map snd lines''
+    carts = mapMaybe snd lines''
 
 parseLine :: Parser [(Grid', Maybe Carts')]
 parseLine = space *> many (parseHorizontal <|> parseVertical <|> parseSlash <|> parseBackSlash <|> parseIntersection <|> parseCartUp <|> parseCartDown <|> parseCartLeft <|> parseCartRight) <* space
@@ -128,9 +128,9 @@ toPosition sp = Position row col where
 tick :: Grid -> Carts -> (Carts, [Position])
 tick grid carts = (carts', collisions') where
   (carts', collisions') = M.foldlWithKey move (M.empty, []) carts where
-    checkForCollison p cs = M.member p cs
-    checkForCollison' p cos = elem p cos
-    turn d p i cs = M.insert p (d, i) cs
+    checkForCollison = M.member
+    checkForCollison' = elem
+    turn d p i = M.insert p (d, i)
     d4i Up' i
       | mod i 3 == 0 = Left'
       | mod i 3 == 1 = Up'

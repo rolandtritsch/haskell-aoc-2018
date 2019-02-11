@@ -33,7 +33,7 @@ data GameState = GameState Game Scores Player Board deriving (Show, Eq)
 input :: Game
 input = (numberOfPlayers, numberOfMarples) where
   -- 431 players; last marble is worth 70950 points
-  tokens = words $ head $ inputRaw "input/Day09input.txt"
+  tokens = (words . head . inputRaw) "input/Day09input.txt"
   numberOfPlayers = read $ tokens !! 0
   numberOfMarples = read $ tokens !! 6
 

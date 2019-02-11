@@ -36,7 +36,7 @@ import Text.Megaparsec.Char (newline, string)
 
 import Util (inputRaw, inputRaw1, inputParser, Parser, integer)
 
-import Data.List (sortBy, delete)
+import Data.List (sortOn, delete, minimumBy)
 import Data.Maybe (fromJust, isNothing)
 import Data.Ord
 
@@ -83,7 +83,7 @@ input1 = inputRaw1 "input/Day24input.txt"
 
 -- | the parsed input (building a/the map of GId to Group).
 parsedInput :: Groups
-parsedInput = M.fromList $ zip [0..] $ inputParser parseGroups "input/Day24input.txt"
+parsedInput = (M.fromList . zip [0..] . inputParser parseGroups) "input/Day24input.txt"
 
 -- | parse the regex and turn it into a sequence/list of Paths and Branches.
 parseGroups :: Parser [Group]
@@ -180,7 +180,7 @@ selectTargets :: Groups -> Targets
 selectTargets groups = snd $ foldl go ((wbcs, viruses), M.empty) selectionOrder where
   wbcs = M.filter ((== WhiteBloodCells) . gType) groups
   viruses = M.filter ((== Viruses) . gType) groups
-  selectionOrder = map fst $ sortBy (comparing snd) (M.toList groups)
+  selectionOrder = (map fst . sortOn snd) (M.toList groups)
   go ((wbcs', viruses'), targets') gId'
     | (gType g') == WhiteBloodCells && isNothing selectedVirusGId = ((wbcs', remainingViruses), targets')
     | (gType g') == Viruses && isNothing selectedWbcsGId = ((remainingWbcs, viruses'), targets')
@@ -200,11 +200,11 @@ selectTarget attacker availableEnemies
   where
     possibleDamage = map (calcDamage'' attacker) (M.toList availableEnemies)
     calcDamage'' a (eId, e) = (calcDamage' a e , eId, e)
-    (highestDamage, _, _) = head $ sortBy (comparing (Down . byDamage)) possibleDamage where
+    (highestDamage, _, _) = minimumBy (comparing (Down . byDamage)) possibleDamage where
       byDamage (d, _, _) = d
     enemyId'
       | highestDamage == 0 = Nothing
-      | otherwise = Just $ snd' $ head $ sortBy (comparing trd') $ filter ((== highestDamage) . fst') possibleDamage
+      | otherwise = Just $ (snd' . minimumBy (comparing trd') . filter ((== highestDamage) . fst')) possibleDamage
       where
         fst' (d, _, _) = d
         snd' (_, eId, _) = eId
@@ -249,7 +249,7 @@ updateGroups aId eId (Just g) remainingAttackerIds groups nextGroups = (remainin
 --
 fight :: Groups -> Targets -> Groups
 fight groups targets = go attackingOrder M.empty where
-  attackingOrder = map fst $ sortBy (comparing (Down . gInitiativeLevel . snd)) (M.toList groups)
+  attackingOrder = (map fst . sortOn (Down . gInitiativeLevel . snd)) (M.toList groups)
   go (attackerId:[]) nextGroups
     | M.member attackerId targets = nextGroups'
     | otherwise = nextGroups''

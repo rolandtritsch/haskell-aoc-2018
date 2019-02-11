@@ -32,7 +32,7 @@ type Sky = [Light]
 
 -- | read the input file
 input :: Sky
-input = map process $ inputRaw "input/Day10input.txt" where
+input = (map process . inputRaw) "input/Day10input.txt" where
   process line = ((c,r), (a,b)) where
     -- position=< 9,  1> velocity=< 0,  2>
     tokens = filter (not . null) $ splitOneOf "=<>, " line
@@ -77,7 +77,7 @@ parseVelocity = (,)
 
 -- | move the sky by one second.
 tick :: Sky -> Sky
-tick sky = map update sky where
+tick = map update where
   update ((c, r), (a,b)) = ((c+a,r+b),(a,b))
 
 -- | return the dimensions of the sky.
@@ -102,7 +102,7 @@ night secs sky
   | otherwise = night (secs + 1) (tick sky)
   where
     ((minCol, maxCol),(minRow, maxRow)) = dimension sky
-    iSeeSomething = (not . null . filter forVerticalLine) [minCol..maxCol] where
+    iSeeSomething = any forVerticalLine [minCol..maxCol] where
       forVerticalLine c = (length . filter (\((c', _), _) -> c == c')) sky >= (maxRow - minRow + 1)
 
 -- | paint the lights on the sky :).

@@ -21,11 +21,11 @@ type Metadata = [Int]
 
 -- | read the input file.
 input :: [Int]
-input = map read $ words $ head $ inputRaw "input/Day08input.txt"
+input = (map read . words . head . inputRaw) "input/Day08input.txt"
 
 -- | create the (root) node (that will contain all other nodes).
 createRootNode :: [Int] -> T.Tree Metadata
-createRootNode inputStream = head $ snd $ go (inputStream, []) where
+createRootNode inputStream = (head . snd . go) (inputStream, []) where
   go ((nOfChildren:nOfMetadata:stream), currentNode) = (drop nOfMetadata remainingStream, nextNode) where
     (remainingStream, children) = (iterate go (stream, [])) !! nOfChildren
     nextNode = T.Node (take nOfMetadata remainingStream) (reverse children) : currentNode
