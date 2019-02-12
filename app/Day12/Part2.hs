@@ -9,7 +9,7 @@ import Day12
 -- | solve the puzzle
 solve :: (State, Notes) -> Int
 solve (state, notes) = gen + offset * constant where
-  (gen, offset, constant) = detectShortcut 50000000000 notes state
+  (gen, offset, constant) = detectShortcut notes 50000000000 state
 
 -- | main
 main :: IO ()
