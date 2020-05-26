@@ -1,4 +1,5 @@
 haskell-aoc.cabal
+stack.yaml.lock
 
 .vscode/
 .stack-work/
