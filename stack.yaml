@@ -1,7 +1,4 @@
-# The resolver to use. Downgraded to 12.14 (to make intero work (again)).
-#resolver: lts-12.14
-resolver: lts-12.25
-#resolver: lts-13.0
+resolver: lts-15.13
 
 # User packages to be built.
 packages:
@@ -9,6 +6,6 @@ packages:
 
 # Dependency packages to be pulled from upstream that are not in the resolver.
 extra-deps:
-- Unique-0.4.7.5
-- megaparsec-7.0.4
-- hspec-megaparsec-2.0.0
+- Unique-0.4.7.7
+- megaparsec-8.0.0
+- hspec-megaparsec-2.1.0
